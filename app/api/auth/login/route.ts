@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { ApiResponseBuilder } from '@/lib/utils/response';
 import { loginSchema } from '@/lib/utils/validation';
-import { createServerSupabaseClient } from '@/lib/config/supabase';
+import { createClient } from '@/utils/supabase/server';
 import type { AuthResponse, User } from '@/lib/types/auth.types';
 
 export async function POST(request: NextRequest) {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     const { email, password } = validationResult.data;
 
-    const supabase = createServerSupabaseClient();
+    const supabase = await createClient();
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email,

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/config/supabase';
+import { createClient } from '@/utils/supabase/client';
 import { appConfig } from '@/lib/config/app.config';
 import type {
   LoginRequest,
@@ -6,6 +6,8 @@ import type {
   AuthResponse,
   User,
 } from '@/lib/types/auth.types';
+
+const supabase = createClient();
 
 class AuthService {
   async login(credentials: LoginRequest): Promise<AuthResponse> {
@@ -104,6 +106,22 @@ class AuthService {
         updatedAt: data.user.updated_at || data.user.created_at,
       };
 
+      const { data: existingUser } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', data.user.email)
+        .maybeSingle();
+
+      if (existingUser) {
+        return {
+          success: false,
+          error: {
+            message: 'Email already exists',
+            code: 'REGISTRATION_ERROR',
+          },
+        };
+      }
+
       // If session exists (email confirmation disabled), return session data
       if (data.session) {
         return {
@@ -120,6 +138,22 @@ class AuthService {
             },
           },
         };
+      }
+
+      if (user) {
+        const { error: dbError } = await supabase.from('users').insert([
+          {
+            id: user.id,
+            email: user.email,
+            full_name: user.fullName,
+            created_at: user.createdAt,
+            updated_at: user.updatedAt,
+          },
+        ]);
+
+        if (dbError) {
+          console.error('Unable to save user', dbError);
+        }
       }
 
       // If no session (email confirmation required), return success without session
@@ -285,6 +319,58 @@ class AuthService {
           message: 'An unexpected error occurred',
           code: 'SERVER_ERROR',
         },
+      };
+    }
+  }
+
+  async forgotPassword(
+    email: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo:
+          process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
+          `${window.location.origin}/auth/reset-password`,
+      });
+
+      if (error) {
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      return {
+        success: false,
+        error: 'An unexpected error occurred',
+      };
+    }
+  }
+
+  async resetPassword(
+    newPassword: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) {
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('Reset password error:', error);
+      return {
+        success: false,
+        error: 'An unexpected error occurred',
       };
     }
   }

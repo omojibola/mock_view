@@ -29,6 +29,14 @@ class ToastService {
     registrationFailed: () =>
       this.error(toastMessages.errors.registrationFailed),
     unexpectedError: () => this.error(toastMessages.errors.unexpectedError),
+    passwordResetSent: () =>
+      this.success(
+        'Password reset email sent! Check your inbox for further instructions.'
+      ),
+    passwordResetSuccess: () =>
+      this.success(
+        'Password reset successfully! You can now sign in with your new password.'
+      ),
   };
 }
 

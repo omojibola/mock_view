@@ -5,9 +5,11 @@ import type React from 'react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useTheme } from '@/lib/contexts/theme-context';
 import authService from '@/lib/services/auth.service';
 import toastService from '@/lib/services/toast.service';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import {
   Home,
   MessageSquare,
@@ -18,6 +20,7 @@ import {
   X,
   User,
 } from 'lucide-react';
+import Logo from '../logo/logo';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -33,6 +36,7 @@ const sidebarItems = [
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user } = useAuth();
+  const { theme } = useTheme();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -46,7 +50,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className='min-h-screen bg-black text-white'>
+    <div
+      className={`min-h-screen ${
+        theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'
+      }`}
+    >
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
@@ -57,19 +65,22 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 ${
+          theme === 'dark'
+            ? 'bg-gray-900'
+            : 'bg-gray-50 border-r border-gray-200'
+        } transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className='flex flex-col h-full'>
           {/* Logo */}
-          <div className='flex items-center justify-between p-6 border-b border-gray-800'>
-            <div className='flex items-center space-x-3'>
-              <div className='w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center'>
-                <MessageSquare className='w-5 h-5 text-white' />
-              </div>
-              <span className='text-xl font-semibold'>InterviewAce</span>
-            </div>
+          <div
+            className={`flex items-center justify-between p-6 border-b ${
+              theme === 'dark' ? 'border-gray-800' : 'border-gray-200'
+            }`}
+          >
+            <Logo />
             <Button
               variant='ghost'
               size='sm'
@@ -86,7 +97,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <Button
                 key={item.href}
                 variant='ghost'
-                className='w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800'
+                className={`w-full justify-start ${
+                  theme === 'dark'
+                    ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                    : 'text-gray-600 hover:text-black hover:bg-gray-100'
+                }`}
                 onClick={() => router.push(item.href)}
               >
                 <item.icon className='w-5 h-5 mr-3' />
@@ -96,21 +111,47 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </nav>
 
           {/* User section */}
-          <div className='p-4 border-t border-gray-800'>
+          <div
+            className={`p-4 border-t ${
+              theme === 'dark' ? 'border-gray-800' : 'border-gray-200'
+            }`}
+          >
             <div className='flex items-center space-x-3 mb-4'>
-              <div className='w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center'>
-                <User className='w-5 h-5 text-gray-300' />
+              <div
+                className={`w-10 h-10 ${
+                  theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'
+                } rounded-full flex items-center justify-center`}
+              >
+                <User
+                  className={`w-5 h-5 ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                  }`}
+                />
               </div>
               <div className='flex-1 min-w-0'>
-                <p className='text-sm font-medium text-white truncate'>
+                <p
+                  className={`text-sm font-medium truncate ${
+                    theme === 'dark' ? 'text-white' : 'text-black'
+                  }`}
+                >
                   {user?.fullName}
                 </p>
-                <p className='text-xs text-gray-400 truncate'>{user?.email}</p>
+                <p
+                  className={`text-xs truncate ${
+                    theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                  }`}
+                >
+                  {user?.email}
+                </p>
               </div>
             </div>
             <Button
               variant='ghost'
-              className='w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800'
+              className={`w-full justify-start ${
+                theme === 'dark'
+                  ? 'text-gray-300 hover:text-white hover:bg-gray-800'
+                  : 'text-gray-600 hover:text-black hover:bg-gray-100'
+              }`}
               onClick={handleLogout}
             >
               <LogOut className='w-5 h-5 mr-3' />
@@ -123,7 +164,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main content */}
       <div className='lg:pl-64'>
         {/* Top bar */}
-        <div className='sticky top-0 z-30 bg-black/80 backdrop-blur-sm border-b border-gray-800'>
+        <div
+          className={`sticky top-0 z-30 backdrop-blur-sm border-b ${
+            theme === 'dark'
+              ? 'bg-black/80 border-gray-800'
+              : 'bg-white/80 border-gray-200'
+          }`}
+        >
           <div className='flex items-center justify-between px-6 py-4'>
             <Button
               variant='ghost'
@@ -134,6 +181,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <Menu className='w-5 h-5' />
             </Button>
             <div className='flex-1' />
+            {/* Theme toggle button */}
+            <ThemeToggle />
           </div>
         </div>
 
