@@ -144,7 +144,7 @@ export default function SettingsPage() {
         <div className='max-w-4xl mx-auto space-y-8'>
           <div>
             <h1
-              className={`text-3xl font-bold ${
+              className={`text-2xl font-bold ${
                 theme === 'dark' ? 'text-white' : 'text-black'
               }`}
             >
@@ -169,7 +169,7 @@ export default function SettingsPage() {
             >
               <CardHeader>
                 <CardTitle
-                  className={`flex items-center gap-2 ${
+                  className={`flex items-center gap-2 text-sm ${
                     theme === 'dark' ? 'text-white' : 'text-black'
                   }`}
                 >
@@ -177,9 +177,9 @@ export default function SettingsPage() {
                   Profile Information
                 </CardTitle>
                 <CardDescription
-                  className={
+                  className={`text-sm ${
                     theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-                  }
+                  }`}
                 >
                   Update your personal information
                 </CardDescription>
@@ -193,7 +193,7 @@ export default function SettingsPage() {
                   <div>
                     <Label
                       htmlFor='fullName'
-                      className={`text-sm font-medium ${
+                      className={`text-xs font-medium ${
                         theme === 'dark' ? 'text-white' : 'text-black'
                       }`}
                     >
@@ -202,7 +202,7 @@ export default function SettingsPage() {
                     <Input
                       id='fullName'
                       {...nameForm.register('fullName')}
-                      className={`mt-1 h-9 ${
+                      className={`mt-1 h-9 text-xs ${
                         theme === 'dark'
                           ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-cyan-400'
                           : 'bg-white border-gray-300 text-black placeholder-gray-500 focus:border-cyan-500'
@@ -219,7 +219,7 @@ export default function SettingsPage() {
                     type='submit'
                     disabled={isUpdatingName || !nameForm.formState.isDirty}
                     size='sm'
-                    className={`${
+                    className={`text-xs ${
                       theme === 'dark'
                         ? 'bg-white text-black hover:bg-gray-100'
                         : 'bg-black text-white hover:bg-gray-800'
@@ -241,7 +241,7 @@ export default function SettingsPage() {
                   <div>
                     <Label
                       htmlFor='email'
-                      className={`text-sm font-medium ${
+                      className={`text-xs font-medium ${
                         theme === 'dark' ? 'text-white' : 'text-black'
                       }`}
                     >
@@ -251,7 +251,7 @@ export default function SettingsPage() {
                       id='email'
                       type='email'
                       {...emailForm.register('email')}
-                      className={`mt-1 h-9 ${
+                      className={`mt-1 h-9 text-xs ${
                         theme === 'dark'
                           ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-cyan-400'
                           : 'bg-white border-gray-300 text-black placeholder-gray-500 focus:border-cyan-500'
@@ -268,7 +268,7 @@ export default function SettingsPage() {
                     type='submit'
                     disabled={isUpdatingEmail || !emailForm.formState.isDirty}
                     size='sm'
-                    className={`${
+                    className={`text-xs ${
                       theme === 'dark'
                         ? 'bg-white text-black hover:bg-gray-100'
                         : 'bg-black text-white hover:bg-gray-800'
@@ -289,7 +289,7 @@ export default function SettingsPage() {
             >
               <CardHeader>
                 <CardTitle
-                  className={`flex items-center gap-2 ${
+                  className={`flex items-center gap-2 text-sm ${
                     theme === 'dark' ? 'text-white' : 'text-black'
                   }`}
                 >
@@ -297,9 +297,9 @@ export default function SettingsPage() {
                   Security
                 </CardTitle>
                 <CardDescription
-                  className={
+                  className={`text-sm ${
                     theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-                  }
+                  }`}
                 >
                   Update your password to keep your account secure
                 </CardDescription>
@@ -312,7 +312,7 @@ export default function SettingsPage() {
                   <div>
                     <Label
                       htmlFor='currentPassword'
-                      className={`text-sm font-medium ${
+                      className={`text-xs font-medium ${
                         theme === 'dark' ? 'text-white' : 'text-black'
                       }`}
                     >
@@ -323,7 +323,7 @@ export default function SettingsPage() {
                         id='currentPassword'
                         type={showCurrentPassword ? 'text' : 'password'}
                         {...passwordForm.register('currentPassword')}
-                        className={`h-9 pr-10 ${
+                        className={`h-9 pr-10 text-xs  ${
                           theme === 'dark'
                             ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-cyan-400'
                             : 'bg-white border-gray-300 text-black placeholder-gray-500 focus:border-cyan-500'
@@ -358,7 +358,7 @@ export default function SettingsPage() {
                   <div>
                     <Label
                       htmlFor='newPassword'
-                      className={`text-sm font-medium ${
+                      className={`text-xs  font-medium ${
                         theme === 'dark' ? 'text-white' : 'text-black'
                       }`}
                     >
@@ -369,7 +369,7 @@ export default function SettingsPage() {
                         id='newPassword'
                         type={showNewPassword ? 'text' : 'password'}
                         {...passwordForm.register('newPassword')}
-                        className={`h-9 pr-10 ${
+                        className={`h-9 pr-10 text-xs ${
                           theme === 'dark'
                             ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-cyan-400'
                             : 'bg-white border-gray-300 text-black placeholder-gray-500 focus:border-cyan-500'
@@ -402,7 +402,7 @@ export default function SettingsPage() {
                   <div>
                     <Label
                       htmlFor='confirmPassword'
-                      className={`text-sm font-medium ${
+                      className={`text-xs font-medium ${
                         theme === 'dark' ? 'text-white' : 'text-black'
                       }`}
                     >
@@ -413,7 +413,7 @@ export default function SettingsPage() {
                         id='confirmPassword'
                         type={showConfirmPassword ? 'text' : 'password'}
                         {...passwordForm.register('confirmPassword')}
-                        className={`h-9 pr-10 ${
+                        className={`h-9 pr-10 text-xs ${
                           theme === 'dark'
                             ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:border-cyan-400'
                             : 'bg-white border-gray-300 text-black placeholder-gray-500 focus:border-cyan-500'
@@ -449,7 +449,7 @@ export default function SettingsPage() {
                     type='submit'
                     disabled={isUpdatingPassword}
                     size='sm'
-                    className={`${
+                    className={`text-xs ${
                       theme === 'dark'
                         ? 'bg-white text-black hover:bg-gray-100'
                         : 'bg-black text-white hover:bg-gray-800'

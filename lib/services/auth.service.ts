@@ -396,7 +396,7 @@ class AuthService {
       console.error('Update profile error:', error);
       return {
         success: false,
-        error: 'An unexpected error occurred',
+        error: 'Unable to update profile',
       };
     }
   }
@@ -421,7 +421,7 @@ class AuthService {
       console.error('Update email error:', error);
       return {
         success: false,
-        error: 'An unexpected error occurred',
+        error: 'Unable to update email',
       };
     }
   }
