@@ -9,14 +9,8 @@ import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
@@ -30,14 +24,7 @@ import {
   type CreateInterviewFormData,
 } from '@/lib/utils/validation';
 import { toastService } from '@/lib/services/toast.service';
-import {
-  ArrowLeft,
-  Sparkles,
-  Clock,
-  CheckCircle,
-  ExternalLink,
-  Play,
-} from 'lucide-react';
+import { ArrowLeft, Sparkles } from 'lucide-react';
 import type {
   GeneratedInterview,
   InterviewType,
@@ -105,7 +92,6 @@ export default function CreateInterviewPage() {
     }
   };
 
-  console.log('Generated Interview:', generatedInterview);
   if (generatedInterview) {
     return (
       <ProtectedRoute>

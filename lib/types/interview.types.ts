@@ -26,6 +26,7 @@ export interface InterviewCard {
     | 'case-study'
     | 'situational';
   score?: number;
+  completedAt?: string;
 }
 
 export type InterviewType =

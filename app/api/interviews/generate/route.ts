@@ -127,34 +127,24 @@ Please return only the questions, without any additional text.
       .insert({
         user_id: user.id,
         interview_kv_key: kvData.key,
-        status: 'generated',
+        status: 'genrated',
       })
       .select()
       .single();
 
-    // Handle duplicate user_interview
-    if (insertUserError?.code === '23505') {
-      const { data: existingUser } = await supabase
-        .from('user_interviews')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('interview_kv_key', kvData.key)
-        .maybeSingle();
-
-      if (existingUser) userInterview = existingUser;
-    } else if (insertUserError) {
-      console.error('Failed to insert user_interview:', insertUserError);
+    if (insertUserError) {
+      console.error(
+        'Failed to insert user_interview attempt:',
+        insertUserError
+      );
       return ApiResponseBuilder.error(
-        'Failed to save user interview',
+        'Failed to save user interview attempt',
         'UNKNOWN_ERROR',
         500,
         insertUserError.message
       );
     }
 
-    // -----------------------------
-    // 5. Normalize questions for frontend
-    // -----------------------------
     const questions: InterviewQuestion[] = (
       kvData.value.questions as string[]
     ).map((questionText: string, index: number) => ({

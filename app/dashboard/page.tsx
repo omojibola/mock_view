@@ -8,7 +8,7 @@ import { InterviewCard } from '@/components/dashboard/interview-card';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useTheme } from '@/lib/contexts/theme-context';
-import { Plus, Sparkles, MessageSquare } from 'lucide-react';
+import { Plus, MessageSquare } from 'lucide-react';
 import type { InterviewCard as InterviewCardType } from '@/lib/types/interview.types';
 
 // Mock data - replace with actual API calls
@@ -135,7 +135,7 @@ export default function DashboardPage() {
           <div>
             <div className='flex items-center justify-between mb-6'>
               <h2
-                className={`text-2xl font-semibold ${
+                className={`text-md font-semibold ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}
               >

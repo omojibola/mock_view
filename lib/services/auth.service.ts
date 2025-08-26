@@ -306,7 +306,6 @@ class AuthService {
         };
       }
 
-      // OAuth redirect will handle the rest
       return {
         success: true,
         data: undefined, // Will be handled by redirect
@@ -368,6 +367,98 @@ class AuthService {
       return { success: true };
     } catch (error) {
       console.error('Reset password error:', error);
+      return {
+        success: false,
+        error: 'An unexpected error occurred',
+      };
+    }
+  }
+
+  async updateProfile(data: {
+    fullName?: string;
+  }): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          full_name: data.fullName,
+        },
+      });
+
+      if (error) {
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('Update profile error:', error);
+      return {
+        success: false,
+        error: 'An unexpected error occurred',
+      };
+    }
+  }
+
+  async updateEmail(
+    newEmail: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        email: newEmail,
+      });
+
+      if (error) {
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('Update email error:', error);
+      return {
+        success: false,
+        error: 'An unexpected error occurred',
+      };
+    }
+  }
+
+  async updatePassword(
+    currentPassword: string,
+    newPassword: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      // First verify current password by attempting to sign in
+      const { error: verifyError } = await supabase.auth.signInWithPassword({
+        email: (await this.getCurrentUser()).data?.email || '',
+        password: currentPassword,
+      });
+
+      if (verifyError) {
+        return {
+          success: false,
+          error: 'Current password is incorrect',
+        };
+      }
+
+      // Update to new password
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) {
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('Update password error:', error);
       return {
         success: false,
         error: 'An unexpected error occurred',

@@ -23,7 +23,7 @@ export function InterviewSuccessCard({ interview }: InterviewSuccessCardProps) {
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(
-      `${window.location.origin}/interviews/${interview?.id}`
+      `${window.location.origin}/interviews/${interview?.id}/start`
     );
     toast.success('Interview link copied to clipboard!');
   };
