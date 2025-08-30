@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
@@ -44,14 +44,23 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const { theme } = useTheme();
   const router = useRouter();
-  const [interviews] = useState<InterviewCardType[]>(mockInterviews);
+  const [interviews, setInterviews] = useState<InterviewCardType[]>([]);
+
+  useEffect(() => {
+    const fetchInterviews = async () => {
+      const response = await fetch('/api/interviews');
+      const data = await response.json();
+      setInterviews(data.data || []);
+    };
+    fetchInterviews();
+  }, []);
 
   const handleCreateInterview = () => {
     router.push('/interviews/create');
   };
 
   const handleRetakeInterview = (id: string) => {
-    router.push(`/interviews/${id}/retake`);
+    router.push(`/interviews/${id}/start`);
   };
 
   const handleViewFeedback = (id: string) => {
@@ -72,7 +81,7 @@ export default function DashboardPage() {
           {/* Welcome Section */}
           <div className='mb-8'>
             <h1
-              className={`text-2xl font-bold mb-2 ${
+              className={`text-xl font-bold mb-2 ${
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
               }`}
             >

@@ -4,6 +4,7 @@ export interface User {
   fullName: string;
   createdAt: string;
   updatedAt: string;
+  credits: number;
 }
 
 export interface AuthSession {

@@ -103,7 +103,7 @@ export default function InterviewsPage() {
           <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8'>
             <div>
               <h1
-                className={`text-2xl font-bold mb-2 ${
+                className={`text-xl font-bold mb-2 ${
                   theme === 'dark' ? 'text-white' : 'text-gray-900'
                 }`}
               >

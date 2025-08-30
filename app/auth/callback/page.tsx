@@ -11,6 +11,33 @@ export default async function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
+        const {
+          data: { user },
+          error: getUserError,
+        } = await supabase.auth.getUser();
+
+        if (getUserError || !user) {
+          console.error('Failed to fetch user', getUserError);
+          return;
+        }
+
+        const { data: existingUser } = await supabase
+          .from('users')
+          .select('id')
+          .eq('id', user.id) // assuming you use auth.users.id as primary key
+          .single();
+
+        if (!existingUser) {
+          await supabase.from('users').insert([
+            {
+              id: user.id,
+              email: user.email,
+              full_name: user.user_metadata.full_name,
+              credits: 3,
+            },
+          ]);
+        }
+
         const { data, error } = await supabase.auth.getSession();
 
         if (error) {

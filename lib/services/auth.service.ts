@@ -43,6 +43,7 @@ class AuthService {
         fullName: data.user.user_metadata?.full_name || data.user.email!,
         createdAt: data.user.created_at,
         updatedAt: data.user.updated_at || data.user.created_at,
+        credits: data.user.user_metadata?.credits || 0,
       };
 
       return {
@@ -77,6 +78,7 @@ class AuthService {
         options: {
           data: {
             full_name: userData.fullName,
+            credits: 3,
           },
           emailRedirectTo:
             process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
@@ -104,6 +106,7 @@ class AuthService {
         fullName: userData.fullName,
         createdAt: data.user.created_at,
         updatedAt: data.user.updated_at || data.user.created_at,
+        credits: 3,
       };
 
       const { data: existingUser } = await supabase
@@ -211,6 +214,7 @@ class AuthService {
         fullName: user.user_metadata?.full_name || user.email!,
         createdAt: user.created_at,
         updatedAt: user.updated_at || user.created_at,
+        credits: user.user_metadata?.credits || 0,
       };
 
       return { success: true, data: userData };
@@ -240,6 +244,7 @@ class AuthService {
         fullName: data.user!.user_metadata?.full_name || data.user!.email!,
         createdAt: data.user!.created_at,
         updatedAt: data.user!.updated_at || data.user!.created_at,
+        credits: data.user!.user_metadata?.credits || 0,
       };
 
       return {

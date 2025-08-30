@@ -72,24 +72,9 @@ export default function StartInterviewPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
-  const [messages, setMessages] = useState<SavedMessage[]>([
-    { role: 'user', content: 'I am ready for the interview.' },
-    { role: 'assistant', content: "Great! Let's get started." },
-    { role: 'assistant', content: 'Can you tell me about yourself?' },
-    {
-      role: 'user',
-      content: 'Sure, I have a background in software development.',
-    },
-    { role: 'assistant', content: 'What are your strengths?' },
-    {
-      role: 'user',
-      content: 'I am very detail-oriented and a quick learner.',
-    },
-    {
-      role: 'assistant',
-      content: 'Thank you for sharing. That concludes our interview.',
-    },
-  ]);
+  const [messages, setMessages] = useState<SavedMessage[]>([]);
+  const [credits, setCredits] = useState(0);
+  const [hasInsufficientCredits, setHasInsufficientCredits] = useState(false);
 
   const messagesRef = useRef<HTMLDivElement>(null);
 
@@ -99,24 +84,38 @@ export default function StartInterviewPage() {
         setIsLoading(true);
         setError(null);
 
-        const response = await fetch(`/api/interviews/${interviewId}`);
+        const [interviewResponse, creditsResponse] = await Promise.all([
+          fetch(`/api/interviews/${interviewId}`),
+          fetch('/api/billing/credits'),
+        ]);
 
-        if (!response.ok) {
-          throw new Error(`Failed to fetch interview: ${response.status}`);
+        if (!interviewResponse.ok) {
+          toastService.error(
+            `Failed to fetch interview: ${interviewResponse.status}`
+          );
         }
 
-        const data = await response.json();
-        if (!data.success) {
-          throw new Error(data.error || 'Failed to load interview data');
+        const interViewData = await interviewResponse.json();
+        const creditsData = await creditsResponse.json();
+
+        if (creditsData.success) {
+          setCredits(creditsData.data.credits);
+          setHasInsufficientCredits(creditsData.data.credits < 1);
         }
 
-        setInterviewQuestions(data.data.questions || []);
+        if (!interViewData.success) {
+          toastService.error(
+            interViewData.error || 'Failed to load interview data'
+          );
+        }
+
+        setInterviewQuestions(interViewData.data.questions || []);
         setSession((prev) => ({
           ...prev,
-          jobTitle: data.data.jobTitle || 'Interview Session',
-          totalQuestions: data.data.questions?.length || 0,
-          questions: data.data.questions || [],
-          type: data.data.type || 'technical',
+          jobTitle: interViewData.data.jobTitle || 'Interview Session',
+          totalQuestions: interViewData.data.questions?.length || 0,
+          questions: interViewData.data.questions || [],
+          type: interViewData.data.type || 'technical',
         }));
       } catch (error) {
         console.error('Failed to fetch interview data:', error);
@@ -138,21 +137,46 @@ export default function StartInterviewPage() {
   }, [messages]);
 
   const handleStartCall = async () => {
-    // setCallStatus(CallStatus.CONNECTING);
+    if (hasInsufficientCredits) {
+      toastService.error(
+        'Insufficient credits. Please purchase more credits to start the interview.'
+      );
+      return;
+    }
 
-    // let formattedQuestions = '';
-    // if (interviewQuestions) {
-    //   formattedQuestions = interviewQuestions
-    //     .map((question) => `- ${question?.question}`)
-    //     .join('\n');
-    // }
+    const deductResponse = await fetch('/api/billing/deduct', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ interviewId, amount: 1 }),
+    });
 
-    // await vapi.start(interviewer, {
-    //   variableValues: {
-    //     questions: formattedQuestions,
-    //   },
-    // });
-    await generateFeedback();
+    const deductData = await deductResponse.json();
+
+    if (!deductData.success) {
+      if (deductResponse.status === 402) {
+        toastService.error(
+          'Insufficient credits. Please purchase more credits.'
+        );
+        return;
+      }
+      console.error(deductData.error || 'Failed to deduct credits');
+    }
+
+    setCredits(deductData.data.credits);
+    setCallStatus(CallStatus.CONNECTING);
+
+    let formattedQuestions = '';
+    if (interviewQuestions) {
+      formattedQuestions = interviewQuestions
+        .map((question) => `- ${question?.question}`)
+        .join('\n');
+    }
+
+    await vapi.start(interviewer, {
+      variableValues: {
+        questions: formattedQuestions,
+      },
+    });
   };
 
   const generateFeedback = async () => {

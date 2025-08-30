@@ -1,6 +1,6 @@
 'use client';
 
-import type React from 'react';
+import { useEffect } from 'react';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -13,12 +13,13 @@ import { ThemeToggle } from '@/components/ui/theme-toggle';
 import {
   Home,
   MessageSquare,
-  BarChart3,
   Settings,
   LogOut,
   Menu,
   X,
   User,
+  CreditCard,
+  Coins,
 } from 'lucide-react';
 import Logo from '../logo/logo';
 
@@ -29,15 +30,34 @@ interface DashboardLayoutProps {
 const sidebarItems = [
   { icon: Home, label: 'Dashboard', href: '/dashboard' },
   { icon: MessageSquare, label: 'Interviews', href: '/interviews' },
-  { icon: BarChart3, label: 'Analytics', href: '/analytics' },
+  { icon: CreditCard, label: 'Billing', href: '/billing' },
   { icon: Settings, label: 'Settings', href: '/settings' },
 ];
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [credits, setCredits] = useState<number>(0);
   const { user } = useAuth();
   const { theme } = useTheme();
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchCredits = async () => {
+      try {
+        const response = await fetch('/api/billing/credits');
+        if (response.ok) {
+          const { data } = await response.json();
+          setCredits(data.credits);
+        }
+      } catch (error) {
+        console.error('Failed to fetch credits:', error);
+      }
+    };
+
+    if (user) {
+      fetchCredits();
+    }
+  }, [user]);
 
   const handleLogout = async () => {
     const result = await authService.logout();
@@ -181,8 +201,30 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <Menu className='w-5 h-5' />
             </Button>
             <div className='flex-1' />
-            {/* Theme toggle button */}
-            <ThemeToggle />
+            <div className='flex items-center space-x-4'>
+              <div
+                className={`flex items-center space-x-2 px-3 py-1.5 rounded-full border cursor-pointer transition-colors ${
+                  theme === 'dark'
+                    ? 'bg-gray-900 border-gray-700 hover:bg-gray-800'
+                    : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                }`}
+                onClick={() => router.push('/billing')}
+              >
+                <Coins
+                  className={`w-4 h-4 ${
+                    theme === 'dark' ? 'text-cyan-400' : 'text-cyan-600'
+                  }`}
+                />
+                <span
+                  className={`text-sm font-medium ${
+                    theme === 'dark' ? 'text-white' : 'text-black'
+                  }`}
+                >
+                  {credits} credits
+                </span>
+              </div>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
 
