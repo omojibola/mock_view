@@ -11,35 +11,6 @@ import { useTheme } from '@/lib/contexts/theme-context';
 import { Plus, MessageSquare } from 'lucide-react';
 import type { InterviewCard as InterviewCardType } from '@/lib/types/interview.types';
 
-// Mock data - replace with actual API calls
-const mockInterviews: InterviewCardType[] = [
-  {
-    id: '1',
-    title: 'Frontend Developer Interview',
-    description: 'React, TypeScript, and modern web development practices',
-    duration: 45,
-    type: 'technical',
-    score: 85,
-  },
-  {
-    id: '2',
-    title: 'Leadership & Communication',
-    description:
-      'Behavioral questions focusing on team leadership and conflict resolution',
-    duration: 30,
-    type: 'behavioral',
-    score: 92,
-  },
-  {
-    id: '3',
-    title: 'System Design Interview',
-    description: 'Scalable architecture and distributed systems design',
-    duration: 60,
-    type: 'technical',
-    score: 78,
-  },
-];
-
 export default function DashboardPage() {
   const { user } = useAuth();
   const { theme } = useTheme();

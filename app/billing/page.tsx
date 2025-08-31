@@ -250,7 +250,13 @@ export default function BillingPage() {
         </div>
 
         {/* Current Credits */}
-        <Card>
+        <Card
+          className={`w-full rounded-lg border transition-colors ${
+            theme === 'dark'
+              ? 'bg-gray-900 border-gray-800 hover:border-cyan-400/50'
+              : 'bg-white border-gray-200 hover:border-cyan-400/50 shadow-sm'
+          }`}
+        >
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
               <Coins className='h-5 w-5 text-cyan-400' />
@@ -287,7 +293,14 @@ export default function BillingPage() {
           </h2>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
             {CREDIT_PACKAGES.map((pkg) => (
-              <Card key={pkg.credits} className='relative'>
+              <Card
+                key={pkg.credits}
+                className={`relative w-full rounded-lg border transition-colors ${
+                  theme === 'dark'
+                    ? 'bg-gray-900 border-gray-800 hover:border-cyan-400/50'
+                    : 'bg-white border-gray-200 hover:border-cyan-400/50 shadow-sm'
+                }`}
+              >
                 {pkg.popular && (
                   <Badge className='absolute -top-2 left-1/2 transform -translate-x-1/2 bg-cyan-400 text-black'>
                     Most Popular
@@ -332,7 +345,13 @@ export default function BillingPage() {
               </Card>
             ))}
 
-            <Card className='relative border-dashed border-2'>
+            <Card
+              className={`relative w-full rounded-lg border transition-colors ${
+                theme === 'dark'
+                  ? 'bg-gray-900 border-gray-800 hover:border-cyan-400/50'
+                  : 'bg-white border-gray-200 hover:border-cyan-400/50 shadow-sm'
+              }`}
+            >
               <CardHeader className='text-center'>
                 <CardTitle className='text-lg flex items-center justify-center gap-2'>
                   <Settings className='h-5 w-5' />
@@ -435,7 +454,13 @@ export default function BillingPage() {
           </div>
         </div>
 
-        <Card>
+        <Card
+          className={`w-full rounded-lg border transition-colors ${
+            theme === 'dark'
+              ? 'bg-gray-900 border-gray-800 hover:border-cyan-400/50'
+              : 'bg-white border-gray-200 hover:border-cyan-400/50 shadow-sm'
+          }`}
+        >
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
               <History className='h-5 w-5' />
@@ -461,7 +486,9 @@ export default function BillingPage() {
                 {transactions.map((transaction) => (
                   <div
                     key={transaction.id}
-                    className='flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors'
+                    className={`${
+                      theme === 'dark' && 'border-gray-800'
+                    } flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors`}
                   >
                     <div className='flex items-center gap-3'>
                       {getTransactionIcon(transaction.type)}
@@ -508,7 +535,13 @@ export default function BillingPage() {
         </Card>
 
         {/* Billing Info */}
-        <Card>
+        <Card
+          className={`w-full rounded-lg border transition-colors ${
+            theme === 'dark'
+              ? 'bg-gray-900 border-gray-800 hover:border-cyan-400/50'
+              : 'bg-white border-gray-200 hover:border-cyan-400/50 shadow-sm'
+          }`}
+        >
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
               <CreditCard className='h-5 w-5' />
@@ -518,27 +551,33 @@ export default function BillingPage() {
           <CardContent className='space-y-3'>
             <div className='flex items-start gap-3'>
               <div className='w-2 h-2 bg-cyan-400 rounded-full mt-2'></div>
-              <div>
-                <div className='font-medium text-foreground'>Free Credits</div>
-                <div className='text-sm text-muted-foreground'>
+              <div className='flex flex-col gap-2'>
+                <div className='font-medium text-sm text-foreground'>
+                  Free Credits
+                </div>
+                <div className='text-xs text-muted-foreground'>
                   Every new account starts with 3 free credits
                 </div>
               </div>
             </div>
             <div className='flex items-start gap-3'>
               <div className='w-2 h-2 bg-cyan-400 rounded-full mt-2'></div>
-              <div>
-                <div className='font-medium text-foreground'>Credit Usage</div>
-                <div className='text-sm text-muted-foreground'>
+              <div className='flex flex-col gap-2'>
+                <div className='font-medium text-sm text-foreground'>
+                  Credit Usage
+                </div>
+                <div className='text-xs text-muted-foreground'>
                   1 credit is deducted when you start an interview session
                 </div>
               </div>
             </div>
             <div className='flex items-start gap-3'>
               <div className='w-2 h-2 bg-cyan-400 rounded-full mt-2'></div>
-              <div>
-                <div className='font-medium text-foreground'>No Expiration</div>
-                <div className='text-sm text-muted-foreground'>
+              <div className='flex flex-col gap-2'>
+                <div className='font-medium text-foreground text-sm'>
+                  No Expiration
+                </div>
+                <div className='text-xs text-muted-foreground'>
                   Your credits never expire and can be used anytime
                 </div>
               </div>
