@@ -63,7 +63,7 @@ class ApiService {
   ) {
     return this.request<T>(endpoint, { ...options, method: 'GET' });
   }
-
+  // @ts-ignore
   async post<T>(
     endpoint: string,
     body?: any,
@@ -71,7 +71,7 @@ class ApiService {
   ) {
     return this.request<T>(endpoint, { ...options, method: 'POST', body });
   }
-
+  // @ts-ignore
   async put<T>(
     endpoint: string,
     body?: any,

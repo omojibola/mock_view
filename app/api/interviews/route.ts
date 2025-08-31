@@ -1,8 +1,7 @@
-import type { NextRequest } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { ApiResponseBuilder } from '@/lib/utils/response';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createClient();
 
@@ -52,7 +51,7 @@ export async function GET(request: NextRequest) {
     feedbackData?.forEach((feedback) => {
       feedbackMap.set(feedback.interview_id, feedback.total_score);
     });
-
+    // @ts-ignore
     const transformedInterviews =
       interviews?.map(
         (interview: {

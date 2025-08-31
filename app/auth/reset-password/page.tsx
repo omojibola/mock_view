@@ -50,9 +50,9 @@ export default function ResetPasswordPage() {
   );
 
   useEffect(() => {
-    const accessToken = (hashData as any).access_token;
-    const refreshToken = (hashData as any).refresh_token;
-    const type = (hashData as any).type;
+    const accessToken = (hashData as { access_token: string })?.access_token;
+    const refreshToken = (hashData as { refresh_token: string }).refresh_token;
+    const type = (hashData as { type: string }).type;
 
     if (type === 'recovery' && accessToken && refreshToken) {
       setIsValidToken(true);

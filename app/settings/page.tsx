@@ -94,6 +94,7 @@ export default function SettingsPage() {
         toastService.error(result.error || 'Failed to update name');
       }
     } catch (error) {
+      console.log(error);
       toastService.error('An unexpected error occurred');
     } finally {
       setIsUpdatingName(false);
@@ -112,6 +113,7 @@ export default function SettingsPage() {
         toastService.error(result.error || 'Failed to update email');
       }
     } catch (error) {
+      console.log(error);
       toastService.error('An unexpected error occurred');
     } finally {
       setIsUpdatingEmail(false);
@@ -133,6 +135,7 @@ export default function SettingsPage() {
       }
     } catch (error) {
       toastService.error('An unexpected error occurred');
+      console.log(error);
     } finally {
       setIsUpdatingPassword(false);
     }

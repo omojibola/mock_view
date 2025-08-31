@@ -6,7 +6,7 @@ import { ProtectedRoute } from '@/components/auth/protected-route';
 import { Button } from '@/components/ui/button';
 import { CardContent } from '@/components/ui/card';
 import { useTheme } from '@/lib/contexts/theme-context';
-import { Mic, MicOff, Phone, PhoneOff, Bot, Code, Grid3X3 } from 'lucide-react';
+import { Mic, MicOff, Code, Grid3X3 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import AI_AGENT from '@/components/interviews/ai-agent';
 import { vapi } from '@/lib/vapi.sdk';
@@ -73,7 +73,6 @@ export default function StartInterviewPage() {
   const [error, setError] = useState<string | null>(null);
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
-  const [credits, setCredits] = useState(0);
   const [hasInsufficientCredits, setHasInsufficientCredits] = useState(false);
 
   const messagesRef = useRef<HTMLDivElement>(null);
@@ -99,7 +98,6 @@ export default function StartInterviewPage() {
         const creditsData = await creditsResponse.json();
 
         if (creditsData.success) {
-          setCredits(creditsData.data.credits);
           setHasInsufficientCredits(creditsData.data.credits < 1);
         }
 
@@ -161,8 +159,6 @@ export default function StartInterviewPage() {
       }
       console.error(deductData.error || 'Failed to deduct credits');
     }
-
-    setCredits(deductData.data.credits);
     setCallStatus(CallStatus.CONNECTING);
 
     let formattedQuestions = '';

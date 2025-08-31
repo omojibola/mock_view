@@ -16,7 +16,7 @@ export class ApiResponseBuilder {
     message: string,
     code = 'UNKNOWN_ERROR',
     status = 400,
-    details?: any
+    details?: string
   ): NextResponse<ApiResponse> {
     return NextResponse.json(
       {

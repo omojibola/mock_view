@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { CardContent } from '../ui/card';
 
 import { Bot } from 'lucide-react';
@@ -20,15 +19,7 @@ interface AI_AGENTProps {
   setIsSpeaking: (isSpeaking: 'user' | 'ai' | null) => void;
 }
 
-const AI_AGENT = ({
-  isSpeaking,
-  userName,
-  userId,
-  interviewId,
-  type,
-  questions,
-  setIsSpeaking,
-}: AI_AGENTProps) => {
+const AI_AGENT = ({ isSpeaking }: AI_AGENTProps) => {
   return (
     <div className='absolute top-4 left-4 w-64 h-48 z-10'>
       <div className='h-full bg-gray-800 border-gray-600 overflow-hidden rounded-lg'>

@@ -90,7 +90,7 @@ export async function POST(
         'Interview not found',
         'NOT_FOUND',
         500,
-        fetchError
+        fetchError?.name
       );
     }
 
@@ -212,7 +212,7 @@ export async function GET(
       return ApiResponseBuilder.unauthorized('Authentication required');
     }
 
-    let query: any = supabase
+    let query = supabase
       .from('feedback')
       .select(
         `
@@ -226,7 +226,7 @@ export async function GET(
   `
       )
       .eq('interview_id', interviewId)
-      .eq('user_id', user.id);
+      .eq('user_id', user.id) as any;
 
     if (attemptNumber) {
       query = query.eq('attempt_number', attemptNumber).single();
@@ -250,7 +250,7 @@ export async function GET(
     }
 
     const responseData = {
-      interviewId: feedback.interview_id,
+      interviewId: feedback?.interview_id,
       userId: feedback.user_id,
       attemptId: feedback.attempt_id,
       totalScore: feedback.total_score,

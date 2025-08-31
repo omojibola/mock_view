@@ -271,11 +271,6 @@ class AuthService {
     }
   }
 
-  setSession(session: string) {
-    // Supabase handles session management automatically via cookies
-    // This method is kept for compatibility but not needed with Supabase
-  }
-
   getSession(): string | null {
     // Supabase handles session retrieval automatically
     // This method is kept for compatibility
@@ -292,7 +287,7 @@ class AuthService {
 
   async signInWithGoogle(): Promise<AuthResponse> {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo:

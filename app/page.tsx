@@ -317,8 +317,8 @@ export default function LandingPage() {
               Practice Any Interview Type
             </h2>
             <p className='mt-4 text-lg text-muted-foreground'>
-              From technical coding interviews to behavioral questions, we've
-              got you covered
+              From technical coding interviews to behavioral questions,
+              we&apos;ve got you covered
             </p>
           </div>
           <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
@@ -485,9 +485,9 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className='text-sm mb-4'>
-                  "InterviewAce helped me prepare for my Google interview. The
-                  AI feedback was incredibly detailed and helped me identify
-                  areas I never knew I needed to work on."
+                  &apos;InterviewAce helped me prepare for my Google interview.
+                  The AI feedback was incredibly detailed and helped me identify
+                  areas I never knew I needed to work on.&apos;
                 </p>
                 <div className='flex items-center'>
                   <div className='h-10 w-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold'>
@@ -511,9 +511,9 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className='text-sm mb-4'>
-                  "The human interviewer feature is amazing! I got to practice
-                  with a real hiring manager from my target company. It made all
-                  the difference."
+                  &apos;The human interviewer feature is amazing! I got to
+                  practice with a real hiring manager from my target company. It
+                  made all the difference.&apos;
                 </p>
                 <div className='flex items-center'>
                   <div className='h-10 w-10 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center text-white font-semibold'>
@@ -537,9 +537,9 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className='text-sm mb-4'>
-                  "I was nervous about interviews, but InterviewAce built my
-                  confidence. The progress tracking showed me how much I
-                  improved over time."
+                  &apos;I was nervous about interviews, but InterviewAce built
+                  my confidence. The progress tracking showed me how much I
+                  improved over time.&apos;
                 </p>
                 <div className='flex items-center'>
                   <div className='h-10 w-10 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white font-semibold'>

@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
         'Failed to fetch transactions',
         'FETCH_ERROR',
         500,
-        error
+        error?.message
       );
     }
 
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
       'Internal server error',
       'INTERNAL_SERVER_ERROR',
       500,
-      error
+      error?.toString()
     );
   }
 }

@@ -122,7 +122,7 @@ Please return only the questions, without any additional text.
     // -----------------------------
     // 4. Link user to KV (user_interviews)
     // -----------------------------
-    let { data: userInterview, error: insertUserError } = await supabase
+    const { data: userInterview, error: insertUserError } = await supabase
       .from('user_interviews')
       .insert({
         user_id: user.id,

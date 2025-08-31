@@ -62,6 +62,7 @@ export default function FeedbackPage() {
           await response.json();
         setFeedback(feedbackData?.data);
       } catch (error) {
+        console.error('Error fetching feedback:', error);
         setError('Failed to load feedback data');
       } finally {
         setIsLoading(false);

@@ -63,8 +63,8 @@ export default function DashboardPage() {
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}
             >
-              Ready to ace your next interview? Let's practice and improve your
-              skills.
+              Ready to ace your next interview? Let&apos;s practice and improve
+              your skills.
             </p>
           </div>
 

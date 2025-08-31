@@ -47,7 +47,6 @@ import {
 import toastService from '@/lib/services/toast.service';
 import type { CreditTransaction } from '@/lib/types/billing.types';
 import { useTheme } from '@/lib/contexts/theme-context';
-import { tr } from 'date-fns/locale';
 
 const CREDIT_PACKAGES = [
   { credits: 5, price: 12.5, popular: false },
@@ -390,8 +389,8 @@ export default function BillingPage() {
                       <DrawerHeader>
                         <DrawerTitle>Purchase Custom Credits</DrawerTitle>
                         <DrawerDescription>
-                          Enter the number of credits you'd like to purchase at
-                          $2.50 per credit.
+                          Enter the number of credits you&apos;d like to
+                          purchase at $2.50 per credit.
                         </DrawerDescription>
                       </DrawerHeader>
                       <div className='px-4'>
@@ -430,8 +429,8 @@ export default function BillingPage() {
                       <DialogHeader>
                         <DialogTitle>Purchase Custom Credits</DialogTitle>
                         <DialogDescription>
-                          Enter the number of credits you'd like to purchase at
-                          $2.50 per credit.
+                          Enter the number of credits you&apos;d like to
+                          purchase at $2.50 per credit.
                         </DialogDescription>
                       </DialogHeader>
                       <CustomCreditsForm

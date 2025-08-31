@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
         'Validation failed',
         'VALIDATION_ERROR',
         400,
-        validationResult.error.issues
+        validationResult.error.issues.toString()
       );
     }
 

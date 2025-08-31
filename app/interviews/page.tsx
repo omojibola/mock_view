@@ -7,7 +7,7 @@ import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTheme } from '@/lib/contexts/theme-context';
-import { Plus, Clock, RotateCcw, Eye, Search, Filter } from 'lucide-react';
+import { Plus, Clock, RotateCcw, Eye } from 'lucide-react';
 import type { InterviewCard as InterviewCardType } from '@/lib/types/interview.types';
 
 export default function InterviewsPage() {

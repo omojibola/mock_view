@@ -4,7 +4,7 @@ export interface ApiResponse<T = any> {
   error?: {
     message: string;
     code: string;
-    details?: any;
+    details?: string;
   };
   meta?: {
     page?: number;
@@ -20,6 +20,7 @@ export interface PaginationParams {
   sortOrder?: 'asc' | 'desc';
 }
 
+// @ts-ignore
 export interface ApiRequestOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   headers?: Record<string, string>;

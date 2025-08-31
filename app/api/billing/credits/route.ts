@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { ApiResponseBuilder } from '@/lib/utils/response';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createClient();
 
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
         'Failed to fetch credits',
         'FETCH_ERROR',
         500,
-        error
+        error.message
       );
     }
     return ApiResponseBuilder.success(credits);
