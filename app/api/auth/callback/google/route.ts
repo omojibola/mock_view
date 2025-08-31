@@ -12,7 +12,7 @@ export async function GET(req: Request) {
   const supabase = await createClient();
 
   // 👇 Exchange the Google code for a Supabase session
-  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+  const { error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
     console.error(error);
