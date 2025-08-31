@@ -13,10 +13,9 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'InterviewAce - Master Your Next Interview',
+  title: 'MockView - Ace Your Next Interview By Practicing First',
   description:
     'Practice interviews with AI or real humans. Get instant feedback and land your dream job.',
-  generator: 'v0.app',
 };
 
 export default function RootLayout({

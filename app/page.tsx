@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -30,6 +31,7 @@ import Logo from '@/components/logo/logo';
 
 export default function LandingPage() {
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -108,7 +110,8 @@ export default function LandingPage() {
             <div className='mt-10 flex flex-col sm:flex-row gap-4 justify-center fade-in-element'>
               <Button
                 size='lg'
-                className='bg-white text-black hover:bg-gray-100 rounded-full text-lg px-8 py-6'
+                className='bg-white text-black hover:bg-gray-100 rounded-full text-sm px-8 py-6'
+                onClick={() => router.push('/auth')}
               >
                 Start Free Practice
                 <ArrowRight className='ml-2 h-5 w-5' />
@@ -116,7 +119,7 @@ export default function LandingPage() {
               <Button
                 variant='outline'
                 size='lg'
-                className='text-lg px-8 py-6 bg-transparent rounded-full'
+                className='text-sm px-8 py-6 bg-transparent rounded-full'
               >
                 Watch Demo
               </Button>
@@ -473,7 +476,7 @@ export default function LandingPage() {
               Loved by job seekers worldwide
             </h2>
             <p className='mt-4 text-lg text-muted-foreground'>
-              Join thousands who have landed their dream jobs with InterviewAce
+              Join thousands who have landed their dream jobs with MockView
             </p>
           </div>
           <div className='grid gap-8 md:grid-cols-3'>
@@ -485,8 +488,8 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className='text-sm mb-4'>
-                  &apos;InterviewAce helped me prepare for my Google interview.
-                  The AI feedback was incredibly detailed and helped me identify
+                  &apos;MockView helped me prepare for my Google interview. The
+                  AI feedback was incredibly detailed and helped me identify
                   areas I never knew I needed to work on.&apos;
                 </p>
                 <div className='flex items-center'>
@@ -537,8 +540,8 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className='text-sm mb-4'>
-                  &apos;I was nervous about interviews, but InterviewAce built
-                  my confidence. The progress tracking showed me how much I
+                  &apos;I was nervous about interviews, but MockView built my
+                  confidence. The progress tracking showed me how much I
                   improved over time.&apos;
                 </p>
                 <div className='flex items-center'>
@@ -566,22 +569,16 @@ export default function LandingPage() {
               Ready to ace your next interview?
             </h2>
             <p className='mt-4 text-lg text-muted-foreground'>
-              Join thousands of successful job seekers who trust InterviewAce
+              Join thousands of successful job seekers who trust MockView
             </p>
             <div className='mt-8 flex flex-col sm:flex-row gap-4 justify-center'>
               <Button
                 size='lg'
-                className='bg-white text-black hover:bg-gray-100 rounded-full text-lg px-8 py-6'
+                className='bg-white text-black hover:bg-gray-100 rounded-full text-sm px-8 py-6'
+                onClick={() => router.push('/auth')}
               >
                 Start Free Today
                 <ArrowRight className='ml-2 h-5 w-5' />
-              </Button>
-              <Button
-                variant='outline'
-                size='lg'
-                className='text-lg px-8 py-6 bg-transparent rounded-full'
-              >
-                Schedule Demo
               </Button>
             </div>
           </div>
@@ -712,7 +709,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className='border-t mt-8 pt-8 text-center text-sm text-muted-foreground'>
-            <p>&copy; 2024 InterviewAce. All rights reserved.</p>
+            <p>&copy; 2025 MockView. All rights reserved.</p>
           </div>
         </div>
       </footer>

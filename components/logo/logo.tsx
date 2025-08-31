@@ -23,7 +23,7 @@ const Logo = () => {
           />
         </svg>
       </div>
-      <span className='font-semibold text-lg'>InterviewAce</span>
+      <span className='font-semibold text-lg'>MockView</span>
     </div>
   );
 };
