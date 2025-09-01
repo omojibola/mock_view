@@ -1,7 +1,7 @@
 export const appConfig = {
   name: 'MockView',
   description: 'Practice interviews with AI or real people',
-  url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  url: process.env.NEXT_PUBLIC_APP_URL,
   api: {
     baseUrl: '/api',
     endpoints: {

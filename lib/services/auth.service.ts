@@ -291,7 +291,7 @@ class AuthService {
         provider: 'google',
         options: {
           redirectTo:
-            process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
+            `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback` ||
             `${window.location.origin}/auth/callback`,
         },
       });

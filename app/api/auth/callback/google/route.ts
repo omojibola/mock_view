@@ -11,7 +11,7 @@ export async function GET(req: Request) {
 
   const supabase = await createClient();
 
-  // 👇 Exchange the Google code for a Supabase session
+  // Exchange the Google code for a Supabase session
   const { error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error) {
@@ -19,6 +19,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
-  // ✅ At this point, Supabase has set the auth cookie automatically!
+  // At this point, Supabase has set the auth cookie automatically!
   return NextResponse.redirect('/dashboard');
 }
