@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { loadStripe } from '@stripe/stripe-js';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { Button } from '@/components/ui/button';
 import {
@@ -53,6 +54,10 @@ const CREDIT_PACKAGES = [
   { credits: 10, price: 25, popular: true },
   { credits: 25, price: 62.5, popular: false },
 ];
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 function CustomCreditsForm({
   onPurchase,
@@ -178,29 +183,48 @@ export default function BillingPage() {
     }
   };
 
-  const purchaseCredits = async (creditAmount: number) => {
-    setPurchasing(creditAmount);
+  //   const purchaseCredits = async (creditAmount: number) => {
+  //     setPurchasing(creditAmount);
+  //     try {
+  //       const response = await fetch('/api/billing/credits', {
+  //         method: 'POST',
+  //         headers: { 'Content-Type': 'application/json' },
+  //         body: JSON.stringify({ credits: creditAmount }),
+  //       });
+
+  //       const data = await response.json();
+  //       if (data.success) {
+  //         setCredits(data.data.credits);
+  //         fetchTransactions();
+  //         toastService.success(`Successfully purchased ${creditAmount} credits!`);
+  //         setCustomModalOpen(false);
+  //       } else {
+  //         toastService.error('Failed to purchase credits');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error purchasing credits:', error);
+  //       toastService.error('Failed to purchase credits');
+  //     } finally {
+  //       setPurchasing(null);
+  //     }
+  //   };
+
+  const purchaseCredits = async (credits: number) => {
     try {
-      const response = await fetch('/api/billing/credits', {
+      const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ credits: creditAmount }),
+        body: JSON.stringify({ credits }),
       });
 
-      const data = await response.json();
-      if (data.success) {
-        setCredits(data.data.credits);
-        fetchTransactions();
-        toastService.success(`Successfully purchased ${creditAmount} credits!`);
-        setCustomModalOpen(false);
-      } else {
-        toastService.error('Failed to purchase credits');
-      }
-    } catch (error) {
-      console.error('Error purchasing credits:', error);
-      toastService.error('Failed to purchase credits');
-    } finally {
-      setPurchasing(null);
+      const { id: sessionId } = await response.json();
+      const stripe = await stripePromise;
+      if (!stripe) throw new Error('Stripe.js failed to load');
+
+      await stripe.redirectToCheckout({ sessionId });
+    } catch (err) {
+      console.error(err);
+      toastService.error('Failed to initiate purchase. Please try again.');
     }
   };
 

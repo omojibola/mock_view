@@ -24,7 +24,7 @@ export default function AuthCallback() {
         const { data: existingUser } = await supabase
           .from('users')
           .select('id')
-          .eq('id', user.id) // assuming you use auth.users.id as primary key
+          .eq('id', user.id)
           .single();
 
         if (!existingUser) {
