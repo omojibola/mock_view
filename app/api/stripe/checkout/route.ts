@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
 
   const { credits } = await req.json();
   const pricePerCredit = 250; // 250 cents = $2.50 per credit
-  const amount = credits * pricePerCredit;
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],

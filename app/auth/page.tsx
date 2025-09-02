@@ -126,9 +126,8 @@ export default function AuthPage() {
 
   return (
     <div className='w-full max-w-md space-y-8'>
-      {/* Header */}
       <div className='text-center'>
-        <h2 className='text-3xl font-bold text-cyan-400 mb-2'>
+        <h2 className='text-xl font-bold text-cyan-400 mb-2'>
           {isSignUp ? 'Create Account' : 'Login'}
         </h2>
         <p className='text-gray-400'>

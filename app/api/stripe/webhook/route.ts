@@ -21,8 +21,9 @@ export async function POST(req: NextRequest) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
-    const userId = session.metadata?.userId;
-    const credits = Number(session.metadata?.credits || 0);
+    const fullSession = await stripe.checkout.sessions.retrieve(session.id);
+    const userId = fullSession.metadata?.userId;
+    const credits = Number(fullSession.metadata?.credits || 0);
 
     if (userId && credits > 0) {
       const supabase = await createClient();
