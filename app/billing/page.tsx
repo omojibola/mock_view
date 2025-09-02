@@ -223,7 +223,7 @@ export default function BillingPage() {
 
       await stripe.redirectToCheckout({ sessionId });
     } catch (err) {
-      console.error(err);
+      console.log(err);
       toastService.error('Failed to initiate purchase. Please try again.');
     }
   };
