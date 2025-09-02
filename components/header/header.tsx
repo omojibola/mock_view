@@ -91,12 +91,14 @@ export default function Header() {
               variant='outline'
               size='sm'
               className='w-full bg-transparent'
+              onClick={() => router.push('/auth')}
             >
               Sign In
             </Button>
             <Button
               size='sm'
               className='w-full bg-white text-black hover:bg-gray-100 rounded-full'
+              onClick={() => router.push('/auth')}
             >
               Get Started
             </Button>
