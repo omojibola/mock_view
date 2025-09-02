@@ -30,8 +30,7 @@ export async function POST(req: NextRequest) {
       const { error } = await supabase.rpc('add_credits', {
         p_user_id: userId,
         p_amount: credits,
-        p_source: 'stripe',
-        p_metadata: { stripeSessionId: session.id },
+        p_source: 'stripe_payment',
       });
 
       if (error) {
