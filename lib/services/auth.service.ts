@@ -322,6 +322,41 @@ class AuthService {
     }
   }
 
+  async signInWithGitHub(): Promise<AuthResponse> {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo:
+            process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
+            `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) {
+        return {
+          success: false,
+          error: { message: error.message, code: 'OAUTH_ERROR' },
+        };
+      }
+      return {
+        success: true,
+        error: {
+          message: 'sign in with github successful',
+          code: 'OAUTH_SUCCESS',
+        },
+      };
+    } catch (error) {
+      console.error('GitHub sign-in error:', error);
+      return {
+        success: false,
+        error: {
+          message: 'An unexpected error occurred',
+          code: 'SERVER_ERROR',
+        },
+      };
+    }
+  }
+
   async forgotPassword(
     email: string
   ): Promise<{ success: boolean; error?: string }> {
