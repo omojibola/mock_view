@@ -20,6 +20,8 @@ import {
   Send,
   CheckCircle,
   XCircle,
+  Clock,
+  LogOut,
 } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 import type { CodingQuestion } from '@/lib/types/interview.types';
@@ -38,6 +40,8 @@ export default function LiveCodingPage() {
   >([]);
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(1800);
+  const [isInterviewEnding, setIsInterviewEnding] = useState(false);
 
   const supportedLanguages = [
     { value: 'javascript', label: 'JavaScript', extension: 'js' },
@@ -163,6 +167,42 @@ public:
   const currentQuestion = questions[currentQuestionIndex];
 
   useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          handleEndInterview();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds
+      .toString()
+      .padStart(2, '0')}`;
+  };
+
+  const handleEndInterview = async () => {
+    if (isInterviewEnding) return;
+    setIsInterviewEnding(true);
+
+    try {
+      console.log('[v0] Auto-submitting interview with current progress');
+
+      router.push(`/interviews/${interviewId}/feedback`);
+    } catch (error) {
+      console.error('[v0] Error ending interview:', error);
+      router.push(`/interviews/${interviewId}/feedback`);
+    }
+  };
+
+  useEffect(() => {
     if (currentQuestion && currentQuestion.starterCode) {
       const starterCode =
         typeof currentQuestion.starterCode === 'string'
@@ -245,7 +285,29 @@ public:
                 {currentQuestion.difficulty}
               </Badge>
             </div>
-            <div className='flex items-center space-x-2'>
+            <div className='flex items-center space-x-4'>
+              <div
+                className={`flex items-center space-x-2 px-3 py-1 rounded-lg ${
+                  timeLeft <= 300
+                    ? 'bg-red-100 text-red-600 dark:bg-red-900/20 dark:text-red-400'
+                    : 'bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
+                }`}
+              >
+                <Clock className='w-4 h-4' />
+                <span className='font-mono text-sm font-medium'>
+                  {formatTime(timeLeft)}
+                </span>
+              </div>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={handleEndInterview}
+                disabled={isInterviewEnding}
+                className='flex items-center space-x-2 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20 bg-transparent'
+              >
+                <LogOut className='w-4 h-4' />
+                <span>{isInterviewEnding ? 'Ending...' : 'End Interview'}</span>
+              </Button>
               <span
                 className={`text-sm ${
                   theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
