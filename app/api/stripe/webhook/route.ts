@@ -22,7 +22,10 @@ export async function POST(req: NextRequest) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
     const fullSession = await stripe.checkout.sessions.retrieve(session.id);
-    const userId = fullSession.metadata?.userId;
+    const userId = fullSession.metadata?.userId
+      ?.toString()
+      .trim()
+      .replace(/[^\w-]/g, '');
     const credits = Number(fullSession.metadata?.credits || 0);
 
     if (userId && credits > 0) {
@@ -34,7 +37,10 @@ export async function POST(req: NextRequest) {
       });
 
       if (error) {
-        console.error('Error adding credits via webhook:', error);
+        console.error('Error adding credits via webhook:', error, {
+          userId,
+          credits,
+        });
       }
     }
   }
