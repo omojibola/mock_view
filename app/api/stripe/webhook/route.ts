@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { createClient } from '@/utils/supabase/server';
+import { createAdminClient } from '@/utils/supabase/admin';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-08-27.basil',
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     const credits = Number(fullSession.metadata?.credits || 0);
 
     if (userId && credits > 0) {
-      const supabase = await createClient();
+      const supabase = createAdminClient();
       const { error } = await supabase.rpc('add_credits', {
         p_user_id: userId,
         p_amount: credits,
@@ -38,8 +38,10 @@ export async function POST(req: NextRequest) {
 
       if (error) {
         console.error('Error adding credits via webhook:', error, {
-          userId,
-          credits,
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code,
         });
       }
     }
