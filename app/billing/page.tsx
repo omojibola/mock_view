@@ -223,7 +223,7 @@ export default function BillingPage() {
 
   const purchaseCredits = async (credits: number) => {
     try {
-      const response = await fetch('/api/stripe/webhook', {
+      const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ credits }),
