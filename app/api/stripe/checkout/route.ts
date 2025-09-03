@@ -31,8 +31,8 @@ export async function POST(req: NextRequest) {
       },
     ],
     mode: 'payment',
-    success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/credits?status=success`,
-    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/credits?status=cancelled`,
+    success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/billing?status=success`,
+    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/billing?status=cancelled`,
     metadata: {
       userId: user.id,
       credits: String(credits),

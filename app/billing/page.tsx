@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { Button } from '@/components/ui/button';
@@ -143,6 +143,10 @@ export default function BillingPage() {
   const [transactions, setTransactions] = useState<CreditTransaction[]>([]);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
   const [customModalOpen, setCustomModalOpen] = useState(false);
+  const [paymentStatusModal, setPaymentStatusModal] = useState<
+    'success' | 'cancelled' | null
+  >(null);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -153,6 +157,14 @@ export default function BillingPage() {
     if (user) {
       fetchCredits();
       fetchTransactions();
+    }
+
+    const status = searchParams.get('status');
+    if (status === 'success' || status === 'cancelled') {
+      setPaymentStatusModal(status);
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('status');
+      window.history.replaceState({}, '', newUrl.pathname);
     }
   }, [user, loading, router]);
 
@@ -211,7 +223,7 @@ export default function BillingPage() {
 
   const purchaseCredits = async (credits: number) => {
     try {
-      const response = await fetch('/api/stripe/checkout', {
+      const response = await fetch('/api/stripe/webhook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ credits }),
@@ -250,6 +262,14 @@ export default function BillingPage() {
     }
   };
 
+  const closePaymentStatusModal = () => {
+    setPaymentStatusModal(null);
+    if (paymentStatusModal === 'success') {
+      fetchCredits();
+      fetchTransactions();
+    }
+  };
+
   if (loading) {
     return (
       <DashboardLayout>
@@ -263,6 +283,80 @@ export default function BillingPage() {
   return (
     <DashboardLayout>
       <div className='space-y-6'>
+        <Dialog
+          open={paymentStatusModal === 'success'}
+          onOpenChange={closePaymentStatusModal}
+        >
+          <DialogContent className='sm:max-w-md'>
+            <DialogHeader>
+              <DialogTitle className='flex items-center gap-2 text-green-600 dark:text-green-400'>
+                <ArrowUpCircle className='h-6 w-6' />
+                Payment Successful!
+              </DialogTitle>
+              <DialogDescription>
+                Your payment has been processed successfully and credits have
+                been added to your account.
+              </DialogDescription>
+            </DialogHeader>
+            <div className='flex items-center justify-center py-6'>
+              <div className='text-center'>
+                <div className='w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4'>
+                  <ArrowUpCircle className='h-8 w-8 text-green-600 dark:text-green-400' />
+                </div>
+                <p className='text-sm text-muted-foreground'>
+                  You can now use your credits to take interviews
+                </p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={closePaymentStatusModal} className='w-full'>
+                Continue
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Payment Cancelled Modal */}
+        <Dialog
+          open={paymentStatusModal === 'cancelled'}
+          onOpenChange={closePaymentStatusModal}
+        >
+          <DialogContent className='sm:max-w-md'>
+            <DialogHeader>
+              <DialogTitle className='flex items-center gap-2 text-orange-600 dark:text-orange-400'>
+                <Settings className='h-6 w-6' />
+                Payment Cancelled
+              </DialogTitle>
+              <DialogDescription>
+                Your payment was cancelled. No charges were made to your
+                account.
+              </DialogDescription>
+            </DialogHeader>
+            <div className='flex items-center justify-center py-6'>
+              <div className='text-center'>
+                <div className='w-16 h-16 bg-orange-100 dark:bg-orange-900/20 rounded-full flex items-center justify-center mx-auto mb-4'>
+                  <Settings className='h-8 w-8 text-orange-600 dark:text-orange-400' />
+                </div>
+                <p className='text-sm text-muted-foreground'>
+                  You can try purchasing credits again anytime
+                </p>
+              </div>
+            </div>
+            <DialogFooter className='flex gap-2'>
+              <Button
+                variant='outline'
+                onClick={closePaymentStatusModal}
+                className='flex-1 bg-transparent'
+              >
+                Maybe Later
+              </Button>
+              <Button onClick={closePaymentStatusModal} className='flex-1'>
+                Try Again
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         <div>
           <h1 className='text-xl font-bold text-foreground'>
             Billing & Credits
