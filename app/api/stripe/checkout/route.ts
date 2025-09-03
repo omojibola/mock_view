@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { credits } = await req.json();
-  const pricePerCredit = 250; // 250 cents = $2.50 per credit
+  const pricePerCredit = 250;
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
