@@ -33,12 +33,8 @@ export async function POST(req: NextRequest) {
         p_source: 'stripe_payment',
       });
 
-      console.log('Credits added via webhook:', { userId, credits });
       if (error) {
-        console.error('Error adding credits via webhook:', error, {
-          userId,
-          credits,
-        });
+        console.error('Error adding credits via webhook:', error);
       }
     }
   }
