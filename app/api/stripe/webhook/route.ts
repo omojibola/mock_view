@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { createAdminClient } from '@/utils/supabase/admin';
+import { createClient } from '@/utils/supabase/server';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-08-27.basil',
@@ -22,27 +22,27 @@ export async function POST(req: NextRequest) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
     const fullSession = await stripe.checkout.sessions.retrieve(session.id);
-    const userId = fullSession.metadata?.userId
-      ?.toString()
-      .trim()
-      .replace(/[^\w-]/g, '');
+    const userId = fullSession.metadata?.userId;
     const credits = Number(fullSession.metadata?.credits || 0);
 
     if (userId && credits > 0) {
-      const supabase = createAdminClient();
-      const { error } = await supabase.rpc('add_credits', {
-        p_user_id: userId,
-        p_amount: credits,
-        p_source: 'stripe_payment',
-      });
+      const supabase = await createClient();
 
-      if (error) {
-        console.error('Error adding credits via webhook:', error, {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code,
+      const { data: userCheck, error: userError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', userId as unknown as string)
+        .single();
+
+      if (userCheck) {
+        const { error } = await supabase.rpc('add_credits', {
+          p_user_id: userCheck?.id as unknown as string,
+          p_amount: credits,
+          p_source: 'stripe_payment',
         });
+        if (error) {
+          console.error('Error adding credits via webhook:', error);
+        }
       }
     }
   }
