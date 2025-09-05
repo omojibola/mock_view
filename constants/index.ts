@@ -52,4 +52,17 @@ End the conversation on a polite and positive note.
       },
     ],
   },
+  maxDurationSeconds: 1800,
+  startSpeakingPlan: {
+    waitSeconds: 2.0,
+    smartEndpointingPlan: {
+      provider: 'livekit',
+      waitFunction: '2000 / (1 + exp(-10 * (x - 0.5)))',
+    },
+  },
+  stopSpeakingPlan: {
+    numWords: 0,
+    voiceSeconds: 0.2,
+    backoffSeconds: 1.0,
+  },
 };
