@@ -6,6 +6,13 @@ import { ProtectedRoute } from '@/components/auth/protected-route';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useTheme } from '@/lib/contexts/theme-context';
 import {
@@ -17,6 +24,9 @@ import {
   TrendingDown,
   CheckCircle,
   AlertCircle,
+  Star,
+  X,
+  MessageSquare,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -49,6 +59,11 @@ export default function FeedbackPage() {
   const [feedback, setFeedback] = useState<FeedbackData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedbackRating, setFeedbackRating] = useState(0);
+  const [feedbackText, setFeedbackText] = useState('');
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [showFloatingWidget, setShowFloatingWidget] = useState(false);
 
   useEffect(() => {
     const fetchFeedback = async () => {
@@ -61,6 +76,10 @@ export default function FeedbackPage() {
         const feedbackData: { success: boolean; data: FeedbackData } =
           await response.json();
         setFeedback(feedbackData?.data);
+        setTimeout(() => {
+          setShowFeedbackModal(true);
+        }, 7000);
+        setShowFloatingWidget(true);
       } catch (error) {
         console.error('Error fetching feedback:', error);
         setError('Failed to load feedback data');
@@ -71,6 +90,64 @@ export default function FeedbackPage() {
 
     fetchFeedback();
   }, [interviewId]);
+
+  const handleSubmitFeedback = async () => {
+    setIsSubmittingFeedback(true);
+    try {
+      const response = await fetch(`/api/user_feedback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          interviewId,
+          rating: feedbackRating,
+          feedback: feedbackText,
+        }),
+      });
+      if (!response.ok) {
+        toast.error('Failed to submit feedback');
+        return;
+      }
+      setFeedbackRating(0);
+      setFeedbackText('');
+      setShowFeedbackModal(false);
+      toast.success('Thank you for your feedback!');
+    } catch (error) {
+      console.error('Failed to submit feedback');
+    } finally {
+      setIsSubmittingFeedback(false);
+    }
+  };
+
+  const StarRating = ({
+    rating,
+    onRatingChange,
+  }: {
+    rating: number;
+    onRatingChange: (rating: number) => void;
+  }) => {
+    return (
+      <div className='flex space-x-1'>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            type='button'
+            onClick={() => onRatingChange(star)}
+            className={`w-8 h-8 transition-colors ${
+              star <= rating
+                ? 'text-yellow-400'
+                : theme === 'dark'
+                ? 'text-gray-600'
+                : 'text-gray-300'
+            } hover:text-yellow-400`}
+          >
+            <Star className='w-full h-full fill-current' />
+          </button>
+        ))}
+      </div>
+    );
+  };
 
   const handleRetakeInterview = () => {
     router.push(`/interviews/${interviewId}/start`);
@@ -425,6 +502,94 @@ export default function FeedbackPage() {
             </Button>
           </div>
         </div>
+
+        {showFloatingWidget && !showFeedbackModal && (
+          <div className='fixed bottom-6 right-6 z-50'>
+            <Button
+              onClick={() => setShowFeedbackModal(true)}
+              className={`rounded-full shadow-lg px-4 py-3 text-sm font-medium transition-all hover:scale-105 ${
+                theme === 'dark'
+                  ? 'bg-cyan-600 hover:bg-cyan-700 text-white'
+                  : 'bg-cyan-500 hover:bg-cyan-600 text-white'
+              }`}
+            >
+              <MessageSquare className='w-4 h-4 mr-2' />
+              Give us a rating
+            </Button>
+          </div>
+        )}
+
+        <Dialog open={showFeedbackModal} onOpenChange={setShowFeedbackModal}>
+          <DialogContent
+            className={`sm:max-w-md ${
+              theme === 'dark'
+                ? 'bg-gray-800 border-gray-700'
+                : 'bg-white border-gray-200'
+            }`}
+          >
+            <DialogHeader>
+              <div className='flex items-center justify-between'>
+                <DialogTitle
+                  className={`text-lg font-semibold ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}
+                >
+                  How was your experience?
+                </DialogTitle>
+              </div>
+            </DialogHeader>
+
+            <div className='space-y-6 pt-4'>
+              <div className='space-y-3'>
+                <p
+                  className={`text-sm ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                  }`}
+                >
+                  Please rate your overall experience
+                </p>
+                <StarRating
+                  rating={feedbackRating}
+                  onRatingChange={setFeedbackRating}
+                />
+              </div>
+
+              <div className='space-y-2'>
+                <label
+                  className={`text-sm font-medium ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                  }`}
+                >
+                  Additional feedback (optional)
+                </label>
+                <Textarea
+                  placeholder='Tell us more about your experience...'
+                  value={feedbackText}
+                  onChange={(e) => setFeedbackText(e.target.value)}
+                  className={`min-h-20 text-sm ${
+                    theme === 'dark'
+                      ? 'bg-gray-700 border-gray-600 text-white placeholder:text-gray-400'
+                      : 'bg-white border-gray-300 text-gray-900 placeholder:text-gray-500'
+                  }`}
+                />
+              </div>
+
+              <div className='flex space-x-3'>
+                <Button
+                  onClick={handleSubmitFeedback}
+                  disabled={feedbackRating === 0 || isSubmittingFeedback}
+                  className={`flex-1 text-sm ${
+                    theme === 'dark'
+                      ? 'bg-cyan-600 hover:bg-cyan-700 text-white'
+                      : 'bg-cyan-500 hover:bg-cyan-600 text-white'
+                  }`}
+                >
+                  {isSubmittingFeedback ? 'Submitting...' : 'Submit'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </DashboardLayout>
     </ProtectedRoute>
   );

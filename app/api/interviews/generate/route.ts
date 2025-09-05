@@ -65,7 +65,7 @@ The job role is ${jobTitle}.
 The job experience level is ${experienceLevel}.
 The job description is: ${jobDescription}.
 The interview type is: ${interviewType}.
-return 10 questions.
+return 7 questions.
 Please return only the questions, without any additional text.
         The questions are going to be read by a voice assistant so do not use "/" or "*" or any other special characters which might break the voice assistant.
         Return the questions formatted like this:
@@ -127,7 +127,7 @@ Please return only the questions, without any additional text.
       .insert({
         user_id: user.id,
         interview_kv_key: kvData.key,
-        status: 'genrated',
+        status: 'generated',
       })
       .select()
       .single();

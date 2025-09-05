@@ -28,6 +28,12 @@ export default function Header() {
           >
             Reviews
           </a>
+          <a
+            href='/resume-roaster'
+            className='block text-sm font-medium hover:text-primary transition-colors py-2'
+          >
+            Resume Roaster
+          </a>
           <Button
             variant='outline'
             size='sm'
@@ -85,6 +91,12 @@ export default function Header() {
             className='block text-sm font-medium hover:text-primary transition-colors py-2'
           >
             Reviews
+          </a>
+          <a
+            href='/resume-roaster'
+            className='block text-sm font-medium hover:text-primary transition-colors py-2'
+          >
+            Resume Roaster
           </a>
           <div className='space-y-2 pt-2'>
             <Button
