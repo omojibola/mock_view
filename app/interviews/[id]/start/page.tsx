@@ -328,7 +328,7 @@ export default function StartInterviewPage() {
             onClick={() => setShowChat(!showChat)}
           >
             <Grid3X3 className='w-4 h-4' />
-            <span className='text-sm'>View</span>
+            <span className='text-sm'>View Transcript</span>
           </Button>
         </div>
 
