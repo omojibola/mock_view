@@ -18,7 +18,7 @@ export function InterviewSuccessCard({ interview }: InterviewSuccessCardProps) {
   const router = useRouter();
 
   const handleStartInterview = () => {
-    router.push(`/interviews/${interview?.id}/start`);
+    router.push(`/interviews/${interview?.id}/select-interviewer`);
   };
 
   const handleCopyLink = () => {

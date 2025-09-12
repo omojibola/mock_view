@@ -168,10 +168,24 @@ export default function StartInterviewPage() {
         .join('\n');
     }
 
-    await vapi.start(interviewer, {
+    const call = await vapi.start(interviewer, {
       variableValues: {
         questions: formattedQuestions,
       },
+    });
+    if (!call) {
+      setCallStatus(CallStatus.INACTIVE);
+      toastService.error('Unable to start interview session.');
+      return;
+    }
+
+    // Save call ID to DB
+    await fetch(`/api/interviews/${interviewId}/session`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ callId: call.id }),
     });
   };
 

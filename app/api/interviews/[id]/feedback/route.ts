@@ -222,7 +222,10 @@ export async function GET(
       interviews_kv (
         value
       )
-    )
+    ),
+    interview_sessions (
+        vapi_call_id
+      )
   `
       )
       .eq('interview_id', interviewId)
@@ -261,6 +264,7 @@ export async function GET(
       createdAt: feedback.created_at,
       interviewTitle: feedback.interview_title,
       type: feedback.type,
+      callId: feedback.interview_sessions?.vapi_call_id ?? null,
     };
 
     return ApiResponseBuilder.success(responseData);

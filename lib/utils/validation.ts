@@ -73,8 +73,6 @@ export const createInterviewSchema = z.object({
     .max(100, 'Job title must be less than 100 characters'),
   jobDescription: z
     .string()
-    .min(1, 'Job description is required')
-    .min(10, 'Job description must be at least 10 characters')
     .max(2000, 'Job description must be less than 2000 characters'),
   interviewType: z
     .enum([
@@ -83,7 +81,8 @@ export const createInterviewSchema = z.object({
       'problem-solving',
       'case-study',
       'situational',
-      'live-coding',
+      'mixed',
+      '',
     ])
     .refine(
       (val) =>
@@ -93,7 +92,7 @@ export const createInterviewSchema = z.object({
           'problem-solving',
           'case-study',
           'situational',
-          'live-coding',
+          'mixed',
         ].includes(val),
       { message: 'Please select a valid interview type' }
     ),

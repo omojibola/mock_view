@@ -31,6 +31,8 @@ import type {
 } from '@/lib/types/interview.types';
 import { Textarea } from '@/components/ui/textarea';
 import { InterviewSuccessCard } from '@/components/interviews/interview-success-card';
+import { JOB_ROLES } from '@/constants/job-roles';
+import { Typeahead } from '@/components/ui/typeahead';
 
 const interviewTypes: { value: InterviewType; label: string }[] = [
   { value: 'technical', label: 'Technical' },
@@ -38,7 +40,7 @@ const interviewTypes: { value: InterviewType; label: string }[] = [
   { value: 'problem-solving', label: 'Problem Solving' },
   { value: 'case-study', label: 'Case Study' },
   { value: 'situational', label: 'Situational' },
-  { value: 'live-coding', label: 'Live Coding' },
+  { value: 'mixed', label: 'Mixed' },
 ];
 
 const experienceLevelOptions = [
@@ -61,7 +63,7 @@ export default function CreateInterviewPage() {
     defaultValues: {
       jobTitle: '',
       jobDescription: '',
-      interviewType: 'technical',
+      interviewType: '',
       experienceLevel: '',
     },
   });
@@ -153,15 +155,12 @@ export default function CreateInterviewPage() {
                   >
                     Job Position
                   </Label>
-                  <Input
-                    id='jobTitle'
+                  <Typeahead
+                    value={form.watch('jobTitle')}
+                    onChange={(val) => form.setValue('jobTitle', val)}
+                    options={JOB_ROLES}
+                    theme={theme}
                     placeholder='e.g. Senior Frontend Developer'
-                    {...form.register('jobTitle')}
-                    className={`h-10 text-xs ${
-                      theme === 'dark'
-                        ? 'bg-gray-700 border-gray-600 text-white'
-                        : 'bg-white border-gray-300'
-                    }`}
                   />
                   {form.formState.errors.jobTitle && (
                     <p className='text-red-500 text-xs'>
@@ -190,11 +189,6 @@ export default function CreateInterviewPage() {
                         : 'bg-white border-gray-300 placeholder-gray-500'
                     }`}
                   />
-                  {form.formState.errors.jobDescription && (
-                    <p className='text-red-500 text-xs'>
-                      {form.formState.errors.jobDescription.message}
-                    </p>
-                  )}
                 </div>
 
                 <div className='space-y-1'>
