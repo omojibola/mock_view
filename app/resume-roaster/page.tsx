@@ -1,8 +1,7 @@
 'use client';
 
-import type React from 'react';
-
 import { useState } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -14,7 +13,6 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Upload, FileText, Zap, Flame, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
 
 export default function ResumeRoasterPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -22,7 +20,7 @@ export default function ResumeRoasterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
 
-  const handleDrag = (e: React.DragEvent) => {
+  const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === 'dragenter' || e.type === 'dragover') {
@@ -32,7 +30,7 @@ export default function ResumeRoasterPage() {
     }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
@@ -41,7 +39,9 @@ export default function ResumeRoasterPage() {
       const droppedFile = e.dataTransfer.files[0];
       if (
         droppedFile.type === 'application/pdf' ||
-        droppedFile.type.includes('document')
+        droppedFile.type.includes('word') ||
+        droppedFile.name.endsWith('.doc') ||
+        droppedFile.name.endsWith('.docx')
       ) {
         setFile(droppedFile);
       }
@@ -142,16 +142,25 @@ export default function ResumeRoasterPage() {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div
-                className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                   dragActive
                     ? 'border-primary bg-primary/5'
                     : 'border-muted-foreground/25 hover:border-muted-foreground/50'
                 }`}
                 onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
                 onDragOver={handleDrag}
+                onDragLeave={handleDrag}
                 onDrop={handleDrop}
               >
+                {/* Full-cover invisible input */}
+                <input
+                  id='resume-upload'
+                  type='file'
+                  accept='.pdf,.doc,.docx'
+                  onChange={handleFileChange}
+                  className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+                />
+
                 {file ? (
                   <div className='space-y-2'>
                     <FileText className='h-12 w-12 mx-auto text-primary' />
@@ -169,27 +178,12 @@ export default function ResumeRoasterPage() {
                     </Button>
                   </div>
                 ) : (
-                  <div className='space-y-2'>
+                  <div className='space-y-2 pointer-events-none'>
                     <Upload className='h-12 w-12 mx-auto text-muted-foreground' />
                     <p className='text-lg font-medium'>Drop your resume here</p>
                     <p className='text-sm text-muted-foreground'>
                       or click to browse files
                     </p>
-                    <input
-                      type='file'
-                      accept='.pdf,.doc,.docx'
-                      onChange={handleFileChange}
-                      className='hidden'
-                      id='resume-upload'
-                    />
-                    <label htmlFor='resume-upload'>
-                      <Button
-                        variant='outline'
-                        className='cursor-pointer bg-transparent'
-                      >
-                        Browse Files
-                      </Button>
-                    </label>
                   </div>
                 )}
               </div>
