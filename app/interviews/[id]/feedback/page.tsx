@@ -48,6 +48,7 @@ interface FeedbackData {
   interviewTitle?: string;
   duration?: number;
   type?: string;
+  callId?: string | null;
 }
 
 export default function FeedbackPage() {
@@ -120,6 +121,10 @@ export default function FeedbackPage() {
     }
   };
 
+  const handleDownloadTranscript = () => {
+    window.open(`/api/transcript/${feedback?.callId}`, '_blank');
+  };
+
   const StarRating = ({
     rating,
     onRatingChange,
@@ -162,8 +167,8 @@ export default function FeedbackPage() {
 
   const getScoreBgColor = (score: number) => {
     if (score >= 90) return 'bg-green-500';
-    if (score >= 80) return 'bg-cyan-400';
-    if (score >= 70) return 'bg-yellow-500';
+    if (score >= 70) return 'bg-cyan-400';
+    if (score >= 50) return 'bg-yellow-500';
     return 'bg-red-500';
   };
 
@@ -210,7 +215,6 @@ export default function FeedbackPage() {
       </ProtectedRoute>
     );
   }
-
   return (
     <ProtectedRoute>
       <DashboardLayout>
@@ -255,9 +259,10 @@ export default function FeedbackPage() {
                 variant='outline'
                 size='sm'
                 className='text-sm bg-transparent'
+                onClick={handleDownloadTranscript}
               >
                 <Download className='w-4 h-4 mr-2' />
-                Export
+                Download Transcript
               </Button>
             </div>
           </div>
@@ -358,7 +363,7 @@ export default function FeedbackPage() {
                           category.score
                         )}`}
                       >
-                        {category.score}%
+                        {category.score}/100
                       </span>
                     </div>
                     <div
@@ -370,7 +375,9 @@ export default function FeedbackPage() {
                         className={`h-2 rounded-full transition-all duration-500 ${getScoreBgColor(
                           category.score
                         )}`}
-                        style={{ width: `${category.score}%` }}
+                        style={{
+                          width: `${category.score}%`,
+                        }}
                       ></div>
                     </div>
                   </div>

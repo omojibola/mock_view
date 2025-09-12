@@ -74,3 +74,71 @@ export async function GET(
     );
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params;
+
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return ApiResponseBuilder.unauthorized('User not authenticated');
+    }
+
+    const { data: userInterview, error: fetchError } = await supabase
+      .from('user_interviews')
+      .select('id, user_id, interview_kv_key')
+      .eq('id', id)
+      .eq('user_id', user.id)
+      .single();
+
+    if (fetchError || !userInterview) {
+      return ApiResponseBuilder.error('Interview not found', 'NOT_FOUND', 404);
+    }
+
+    const { error: feedbackDeleteError } = await supabase
+      .from('feedback')
+      .delete()
+      .eq('interview_id', id);
+
+    if (feedbackDeleteError) {
+      console.error('Error deleting feedback:', feedbackDeleteError);
+      return ApiResponseBuilder.error(
+        'Failed to delete interview feedback',
+        'DELETE_ERROR',
+        500
+      );
+    }
+
+    const { error: deleteError } = await supabase
+      .from('user_interviews')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (deleteError) {
+      console.error('Error deleting interview:', deleteError);
+      return ApiResponseBuilder.error(
+        'Failed to delete interview',
+        'DELETE_ERROR',
+        500
+      );
+    }
+
+    return ApiResponseBuilder.success({ deletedId: id });
+  } catch (error) {
+    console.error('Error deleting interview:', error);
+    return ApiResponseBuilder.error(
+      'Internal server error',
+      'SERVER_ERROR',
+      500
+    );
+  }
+}

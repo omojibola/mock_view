@@ -103,16 +103,16 @@ export default function ResumeRoasterPage() {
         <div className='text-center mb-12'>
           <div className='flex items-center justify-center mb-4'>
             <Flame className='h-8 w-8 text-orange-500 mr-2' />
-            <h1 className='text-4xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent'>
+            <h1 className='text-2xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent'>
               Resume Roaster
             </h1>
             <Flame className='h-8 w-8 text-orange-500 ml-2' />
           </div>
-          <p className='text-xl text-muted-foreground mb-2'>
+          <p className='text-md text-muted-foreground mb-2'>
             Get your resume brutally honest feedback from our AI
           </p>
           <p className='text-sm text-muted-foreground'>
-            Upload your resume and prepare for some spicy feedback! 🌶️
+            Upload your resume and prepare for some annoying feedback!
           </p>
           <div className='flex items-center justify-center gap-2 mt-4'>
             <Badge variant='secondary' className='text-xs'>
@@ -260,7 +260,7 @@ export default function ResumeRoasterPage() {
                       Upload your resume to get roasted!
                     </p>
                     <p className='text-sm text-muted-foreground/70'>
-                      Our AI is ready to serve some spicy feedback
+                      Our AI is ready to serve some funny feedback
                     </p>
                   </div>
                 </div>

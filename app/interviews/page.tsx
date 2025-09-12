@@ -7,25 +7,80 @@ import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTheme } from '@/lib/contexts/theme-context';
-import { Plus, Clock, RotateCcw, Eye } from 'lucide-react';
+import {
+  Plus,
+  Clock,
+  RotateCcw,
+  Eye,
+  Search,
+  Filter,
+  Loader2,
+  Trash2,
+} from 'lucide-react';
 import type { InterviewCard as InterviewCardType } from '@/lib/types/interview.types';
+import { toast } from 'sonner';
 
 export default function InterviewsPage() {
   const { theme } = useTheme();
   const router = useRouter();
   const [interviews, setInterviews] = useState<InterviewCardType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    interviewId: string;
+    title: string;
+  }>({
+    isOpen: false,
+    interviewId: '',
+    title: '',
+  });
+  const [deleting, setDeleting] = useState(false);
 
   const handleCreateInterview = () => {
     router.push('/interviews/create');
   };
 
   const handleTakeInterview = (id: string) => {
-    router.push(`/interviews/${id}/start`);
+    router.push(`/interviews/${id}/select-interviewer`);
   };
 
   const handleViewResults = (id: string) => {
     router.push(`/interviews/${id}/feedback`);
+  };
+
+  const handleDeleteClick = (id: string, title: string) => {
+    setDeleteModal({ isOpen: true, interviewId: id, title });
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      setDeleting(true);
+      const response = await fetch(
+        `/api/interviews/${deleteModal.interviewId}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      if (!response.ok) {
+        toast.error('Failed to delete interview');
+      }
+
+      setInterviews((prev) =>
+        prev.filter((interview) => interview.id !== deleteModal.interviewId)
+      );
+      setDeleteModal({ isOpen: false, interviewId: '', title: '' });
+      toast.success('Interview deleted successfully');
+    } catch (err) {
+      console.error('Error deleting interview:', err);
+      toast.error('Failed to delete interview');
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModal({ isOpen: false, interviewId: '', title: '' });
   };
 
   const formatDuration = (minutes: number) => {
@@ -153,9 +208,25 @@ export default function InterviewsPage() {
                         >
                           {interview.title}
                         </h3>
-                        <Badge className={getBadgeColor(interview.type)}>
-                          {interview.type}
-                        </Badge>
+                        <div className='flex items-center gap-2'>
+                          <Badge className={getBadgeColor(interview.type)}>
+                            {interview.type}
+                          </Badge>
+                          <Button
+                            variant='ghost'
+                            size='sm'
+                            onClick={() =>
+                              handleDeleteClick(interview.id, interview.title)
+                            }
+                            className={`p-2 hover:bg-red-500/10 hover:text-red-500 ${
+                              theme === 'dark'
+                                ? 'text-gray-400'
+                                : 'text-gray-500'
+                            }`}
+                          >
+                            <Trash2 className='w-4 h-4' />
+                          </Button>
+                        </div>
                       </div>
                       <p
                         className={`text-xs mb-3 line-clamp-2 leading-5 ${
@@ -264,6 +335,62 @@ export default function InterviewsPage() {
                 <Plus className='w-4 h-4 mr-2' />
                 Create Your First Interview
               </Button>
+            </div>
+          )}
+          {/* Delete Confirmation Modal */}
+          {deleteModal.isOpen && (
+            <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4'>
+              <div
+                className={`max-w-md w-full rounded-lg p-6 ${
+                  theme === 'dark'
+                    ? 'bg-gray-900 border border-gray-800'
+                    : 'bg-white border border-gray-200'
+                }`}
+              >
+                <h3
+                  className={`text-lg font-semibold mb-2 ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}
+                >
+                  Delete Interview
+                </h3>
+                <p
+                  className={`mb-6 text-sm ${
+                    theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                  }`}
+                >
+                  Are you sure you want to delete "{deleteModal.title}"? This
+                  action cannot be undone.
+                </p>
+                <div className='flex justify-between'>
+                  <Button
+                    variant='outline'
+                    onClick={handleDeleteCancel}
+                    disabled={deleting}
+                    className={`${
+                      theme === 'dark'
+                        ? 'border-gray-700 hover:bg-gray-800'
+                        : 'border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleDeleteConfirm}
+                    disabled={deleting}
+                    className='bg-red-600 hover:bg-red-700 text-white'
+                  >
+                    {deleting ? (
+                      <>
+                        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                        Deleting...
+                      </>
+                    ) : (
+                      'Delete'
+                    )}
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
         </div>

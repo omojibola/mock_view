@@ -113,7 +113,7 @@ export default function LandingPage() {
                 className='bg-white text-black hover:bg-gray-100 rounded-full text-sm px-8 py-6 z-50'
                 onClick={() => router.push('/auth')}
               >
-                Start Free Practice
+                Get Started Now
                 <ArrowRight className='ml-2 h-5 w-5' />
               </Button>
               <Button
@@ -143,74 +143,8 @@ export default function LandingPage() {
         ></div>
       </section>
 
-      <section className='py-12 border-b'>
-        <div className='container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-          <p className='text-center text-sm text-muted-foreground mb-8 fade-in-element'>
-            Trusted by professionals from leading companies
-          </p>
-          <div className='relative overflow-hidden'>
-            <div className='flex space-x-12 scroll-animation'>
-              {/* First set of logos */}
-              <div className='flex items-center space-x-12 min-w-max'>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Google
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Microsoft
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Apple
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Meta
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Netflix
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Amazon
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Tesla
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Spotify
-                </div>
-              </div>
-              {/* Duplicate set for seamless loop */}
-              <div className='flex items-center space-x-12 min-w-max'>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Google
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Microsoft
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Apple
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Meta
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Netflix
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Amazon
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Tesla
-                </div>
-                <div className='text-2xl font-bold text-muted-foreground/60'>
-                  Spotify
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Features Section */}
-      <section id='features' className='py-20 md:py-32'>
+      <section id='features' className='py-6 md:py-6'>
         <div className='container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           <div className='mx-auto max-w-2xl text-center mb-16 fade-in-element'>
             <h2 className='text-3xl font-bold sm:text-4xl'>
@@ -488,19 +422,16 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className='text-sm mb-4'>
-                  &apos;MockView helped me prepare for my Google interview. The
-                  AI feedback was incredibly detailed and helped me identify
-                  areas I never knew I needed to work on.&apos;
+                  &apos;MockView helped me prepare for my interview. The AI
+                  feedback was incredibly detailed and helped me identify areas
+                  I never knew I needed to work on.&apos;
                 </p>
                 <div className='flex items-center'>
                   <div className='h-10 w-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold'>
                     S
                   </div>
                   <div className='ml-3'>
-                    <p className='font-semibold text-sm'>Sarah Chen</p>
-                    <p className='text-xs text-muted-foreground'>
-                      Software Engineer at Google
-                    </p>
+                    <p className='font-semibold text-sm'>Sarah</p>
                   </div>
                 </div>
               </CardContent>
@@ -515,18 +446,14 @@ export default function LandingPage() {
                 </div>
                 <p className='text-sm mb-4'>
                   &apos;The human interviewer feature is amazing! I got to
-                  practice with a real hiring manager from my target company. It
-                  made all the difference.&apos;
+                  practice with a real hiring manager. It helped a lot.&apos;
                 </p>
                 <div className='flex items-center'>
                   <div className='h-10 w-10 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center text-white font-semibold'>
-                    M
+                    D
                   </div>
                   <div className='ml-3'>
-                    <p className='font-semibold text-sm'>Marcus Johnson</p>
-                    <p className='text-xs text-muted-foreground'>
-                      Product Manager at Meta
-                    </p>
+                    <p className='font-semibold text-sm'>Dami</p>
                   </div>
                 </div>
               </CardContent>
@@ -549,10 +476,7 @@ export default function LandingPage() {
                     A
                   </div>
                   <div className='ml-3'>
-                    <p className='font-semibold text-sm'>Aisha Patel</p>
-                    <p className='text-xs text-muted-foreground'>
-                      Data Scientist at Netflix
-                    </p>
+                    <p className='font-semibold text-sm'>Aisha</p>
                   </div>
                 </div>
               </CardContent>

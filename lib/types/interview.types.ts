@@ -8,8 +8,9 @@ export interface Interview {
     | 'problem-solving'
     | 'case-study'
     | 'situational'
-    | 'live-coding';
-  duration: number; // in minutes
+    | 'mixed'
+    | '';
+  duration: number;
   status: 'completed' | 'in-progress' | 'scheduled';
   createdAt: string;
   completedAt?: string;
@@ -28,7 +29,8 @@ export interface InterviewCard {
     | 'problem-solving'
     | 'case-study'
     | 'situational'
-    | 'live-coding';
+    | 'mixed';
+
   completedAt: string;
   score?: number;
 }
@@ -39,7 +41,7 @@ export type InterviewType =
   | 'problem-solving'
   | 'case-study'
   | 'situational'
-  | 'live-coding';
+  | 'mixed';
 
 export interface InterviewQuestion {
   id: string;
