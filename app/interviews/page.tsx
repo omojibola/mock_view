@@ -359,8 +359,8 @@ export default function InterviewsPage() {
                     theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
                   }`}
                 >
-                  Are you sure you want to delete "{deleteModal.title}"? This
-                  action cannot be undone.
+                  Are you sure you want to delete &quot;{deleteModal.title}
+                  &quot;? This action cannot be undone.
                 </p>
                 <div className='flex justify-between'>
                   <Button
