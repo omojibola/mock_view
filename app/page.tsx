@@ -28,10 +28,12 @@ import {
 import { useEffect, useRef } from 'react';
 import Header from '@/components/header/header';
 import Logo from '@/components/logo/logo';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function LandingPage() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const router = useRouter();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -111,7 +113,11 @@ export default function LandingPage() {
               <Button
                 size='lg'
                 className='bg-white text-black hover:bg-gray-100 rounded-full text-sm px-8 py-6 z-50'
-                onClick={() => router.push('/auth')}
+                onClick={() =>
+                  isAuthenticated
+                    ? router.push('/dashboard')
+                    : router.push('/auth')
+                }
               >
                 Get Started Now
                 <ArrowRight className='ml-2 h-5 w-5' />

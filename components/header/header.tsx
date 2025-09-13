@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Logo from '../logo/logo';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 export default function Header() {
   const router = useRouter();
+  const { isAuthenticated } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -34,20 +36,28 @@ export default function Header() {
           >
             Resume Roaster
           </a>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={() => router.push('/auth')}
-          >
-            Sign In
-          </Button>
-          <Button
-            size='sm'
-            className='bg-white text-black hover:bg-gray-100 rounded-full'
-            onClick={() => router.push('/auth')}
-          >
-            Get Started
-          </Button>
+
+          {isAuthenticated ? (
+            <>
+              <Button
+                size='sm'
+                className='bg-white text-black hover:bg-gray-100 rounded-full'
+                onClick={() => router.push('/dashboard')}
+              >
+                Dashboard
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => router.push('/auth')}
+              >
+                Sign In
+              </Button>
+            </>
+          )}
         </nav>
         <button
           className='md:hidden p-2'
@@ -98,23 +108,35 @@ export default function Header() {
           >
             Resume Roaster
           </a>
-          <div className='space-y-2 pt-2'>
-            <Button
-              variant='outline'
-              size='sm'
-              className='w-full bg-transparent'
-              onClick={() => router.push('/auth')}
-            >
-              Sign In
-            </Button>
-            <Button
-              size='sm'
-              className='w-full bg-white text-black hover:bg-gray-100 rounded-full'
-              onClick={() => router.push('/auth')}
-            >
-              Get Started
-            </Button>
-          </div>
+          {isAuthenticated ? (
+            <div className='space-y-2 pt-2'>
+              <Button
+                size='sm'
+                className='w-full bg-white text-black hover:bg-gray-100 rounded-full'
+                onClick={() => router.push('/dashboard')}
+              >
+                Dashboard
+              </Button>
+            </div>
+          ) : (
+            <div className='space-y-2 pt-2'>
+              <Button
+                variant='outline'
+                size='sm'
+                className='w-full bg-transparent'
+                onClick={() => router.push('/auth')}
+              >
+                Sign In
+              </Button>
+              <Button
+                size='sm'
+                className='w-full bg-white text-black hover:bg-gray-100 rounded-full'
+                onClick={() => router.push('/auth')}
+              >
+                Get Started
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </header>
