@@ -35,9 +35,9 @@ async function createPdf(transcript: any): Promise<Buffer> {
 
 export async function GET(
   request: NextRequest,
-  context: { params: { callId: string } }
+  context: { params: Promise<{ callId: string }> }
 ): Promise<NextResponse> {
-  const { callId } = context.params;
+  const { callId } = await context.params;
   if (!callId) {
     return ApiResponseBuilder.error('Missing callId', 'MISSING_CALL_ID', 400);
   }
@@ -89,7 +89,7 @@ export async function GET(
     const data = await res.json();
     const transcript = data.transcript;
 
-    const pdfBuffer = await createPdf(transcript);
+    const pdfBuffer: any = await createPdf(transcript);
 
     return new NextResponse(pdfBuffer, {
       status: 200,
