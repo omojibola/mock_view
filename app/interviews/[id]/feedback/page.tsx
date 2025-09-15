@@ -19,7 +19,6 @@ import {
   ArrowLeft,
   RotateCcw,
   Download,
-  Share2,
   TrendingUp,
   TrendingDown,
   CheckCircle,
@@ -253,14 +252,6 @@ export default function FeedbackPage() {
               </p>
             </div>
             <div className='flex space-x-3'>
-              <Button
-                variant='outline'
-                size='sm'
-                className='text-sm bg-transparent'
-              >
-                <Share2 className='w-4 h-4 mr-2' />
-                Share
-              </Button>
               <Button
                 variant='outline'
                 size='sm'

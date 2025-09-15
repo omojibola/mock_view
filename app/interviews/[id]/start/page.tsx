@@ -13,6 +13,8 @@ import { vapi } from '@/lib/vapi.sdk';
 import { interviewer } from '@/constants';
 import { InterviewQuestion } from '@/lib/types/interview.types';
 import toastService from '@/lib/services/toast.service';
+import { InfoIcon } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface InterviewSession {
   id: string;
@@ -331,6 +333,21 @@ export default function StartInterviewPage() {
             <span className='text-sm'>View Transcript</span>
           </Button>
         </div>
+        {callStatus !== CallStatus.ACTIVE && (
+          <div className='m-5 '>
+            <Alert variant={'warning'}>
+              <InfoIcon />
+              <AlertTitle>Disclaimer</AlertTitle>
+              <AlertDescription>
+                Please do not share any sensitive, personal, or confidential
+                information with this AI agent. Conversations may be stored or
+                recorded and could be used for quality assurance, research, or
+                training purposes. By starting this interview, you acknowledge
+                and accept this.
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
 
         <div className='flex-1 flex overflow-hidden'>
           <div className={`flex-1 bg-gray-900 ${showChat ? 'pr-0' : ''}`}>
