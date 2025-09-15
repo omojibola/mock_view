@@ -165,7 +165,7 @@ export default function SelectInterviewerPage() {
           <div className='text-center'>
             <Button
               onClick={handleContinue}
-              disabled={!selectedInterviewer || isLoading}
+              // disabled={!selectedInterviewer || isLoading}
               className={`px-8 py-3 text-sm font-medium w-full ${
                 theme === 'dark'
                   ? 'bg-white hover:bg-gray-100 text-black'
