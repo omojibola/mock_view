@@ -70,7 +70,6 @@ export default function CreateInterviewPage() {
 
   const handleGenerateInterview = async (data: CreateInterviewFormData) => {
     setIsGenerating(true);
-
     try {
       const response = await fetch('/api/interviews/generate', {
         method: 'POST',

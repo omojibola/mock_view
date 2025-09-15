@@ -114,12 +114,13 @@ export async function POST(
         Interview Transcript:
         ${formattedTranscript}
 
+
         Please provide:
         1. A total score out of 100
-        2. Category-specific scores for: Communication, Technical Knowledge, Problem Solving, Cultural Fit, and Experience Relevance
+        2. Category-specific scores for: Communication, Technical Knowledge, Problem Solving, Cultural Fit, and Experience Relevance, only return technical knowledge if job details type is technical
         3. Key strengths demonstrated
         4. Areas for improvement with specific suggestions
-        5. A comprehensive final assessment
+        5. A comprehensive final assessment, do not address user by name or gender, just say the candidate
 
         Base your evaluation on:
         - Relevance and depth of answers
