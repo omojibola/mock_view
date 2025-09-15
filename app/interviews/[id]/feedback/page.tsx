@@ -158,18 +158,24 @@ export default function FeedbackPage() {
     router.push(`/interviews/${interviewId}/start`);
   };
 
-  const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-green-500';
-    if (score >= 80) return 'text-cyan-400';
-    if (score >= 70) return 'text-yellow-500';
+  const getScoreColor = (score: number, maxScore: number) => {
+    const scorePercentage = getScorePercentage(score, maxScore);
+    if (scorePercentage >= 80) return 'text-green-500';
+    if (scorePercentage >= 60) return 'text-cyan-400';
+    if (scorePercentage >= 50) return 'text-yellow-500';
     return 'text-red-500';
   };
 
-  const getScoreBgColor = (score: number) => {
-    if (score >= 90) return 'bg-green-500';
-    if (score >= 70) return 'bg-cyan-400';
-    if (score >= 50) return 'bg-yellow-500';
+  const getScoreBgColor = (score: number, maxScore: number) => {
+    const scorePercentage = getScorePercentage(score, maxScore);
+    if (scorePercentage >= 90) return 'bg-green-500';
+    if (scorePercentage >= 70) return 'bg-cyan-400';
+    if (scorePercentage >= 50) return 'bg-yellow-500';
     return 'bg-red-500';
+  };
+
+  const getScorePercentage = (score: number, maxScore: number) => {
+    return (score / maxScore) * 100;
   };
 
   if (isLoading) {
@@ -279,7 +285,8 @@ export default function FeedbackPage() {
               <div className='text-center'>
                 <div
                   className={`text-4xl font-bold mb-2 ${getScoreColor(
-                    feedback.totalScore
+                    feedback.totalScore,
+                    100
                   )}`}
                 >
                   {feedback.totalScore}%
@@ -322,7 +329,8 @@ export default function FeedbackPage() {
                 >
                   <div
                     className={`h-3 rounded-full transition-all duration-500 ${getScoreBgColor(
-                      feedback.totalScore
+                      feedback.totalScore,
+                      100
                     )}`}
                     style={{ width: `${feedback.totalScore}%` }}
                   ></div>
@@ -360,10 +368,11 @@ export default function FeedbackPage() {
                       </span>
                       <span
                         className={`text-sm font-semibold ${getScoreColor(
-                          category.score
+                          category.score,
+                          category.maxScore
                         )}`}
                       >
-                        {category.score}/100
+                        {category.score}/{category.maxScore}
                       </span>
                     </div>
                     <div
@@ -373,10 +382,14 @@ export default function FeedbackPage() {
                     >
                       <div
                         className={`h-2 rounded-full transition-all duration-500 ${getScoreBgColor(
-                          category.score
+                          category.score,
+                          category.maxScore
                         )}`}
                         style={{
-                          width: `${category.score}%`,
+                          width: `${getScorePercentage(
+                            category.score,
+                            category.maxScore
+                          )}%`,
                         }}
                       ></div>
                     </div>

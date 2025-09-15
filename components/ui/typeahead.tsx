@@ -20,6 +20,7 @@ export function Typeahead({
   theme,
 }: TypeaheadProps) {
   const [query, setQuery] = useState(value);
+  const [showOptions, setShowOptions] = useState(false);
 
   const filtered = options.filter((role) =>
     role.toLowerCase().includes(query.toLowerCase())
@@ -31,11 +32,12 @@ export function Typeahead({
         value={query}
         placeholder={placeholder}
         onChange={(e) => {
+          setShowOptions(true);
           setQuery(e.target.value);
           onChange(e.target.value);
         }}
       />
-      {query && (
+      {query && showOptions && (
         <div
           className={`absolute z-10 w-full mt-1 max-h-48 overflow-auto rounded-md border shadow-lg ${
             theme === 'dark'
@@ -55,6 +57,7 @@ export function Typeahead({
                 onClick={() => {
                   setQuery(role);
                   onChange(role);
+                  setShowOptions(false);
                 }}
               >
                 {role}

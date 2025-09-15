@@ -44,11 +44,7 @@ export default function SelectInterviewerPage() {
   };
 
   const handleContinue = async () => {
-    if (!selectedInterviewer) return;
-
     setIsLoading(true);
-
-    // Simulate a short delay for better UX
     await new Promise((resolve) => setTimeout(resolve, 500));
     router.push(`/interviews/${interviewId}/start`);
   };

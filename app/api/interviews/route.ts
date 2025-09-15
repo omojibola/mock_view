@@ -1,6 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
 import { ApiResponseBuilder } from '@/lib/utils/response';
-import { type NextRequest } from 'next/server';
 
 export async function GET() {
   try {
