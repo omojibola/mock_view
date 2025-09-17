@@ -13,6 +13,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Upload, FileText, Zap, Flame, ArrowLeft } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function ResumeRoasterPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -239,7 +240,11 @@ export default function ResumeRoasterPage() {
                     </Button>
                     <Button
                       variant='outline'
-                      onClick={() => navigator.clipboard.writeText(roast)}
+                      onClick={() => {
+                        navigator.clipboard.writeText(roast);
+
+                        toast.success('Copied!');
+                      }}
                       className='flex-1'
                     >
                       Copy Roast
