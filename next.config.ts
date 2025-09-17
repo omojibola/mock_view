@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   // eslint: {
   //   ignoreDuringBuilds: true,
   // },
-  serverExternalPackages: ['pdfkit'],
+  serverExternalPackages: ['pdfkit', 'pdf-parse'],
 };
 
 export default nextConfig;
