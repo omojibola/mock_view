@@ -106,8 +106,65 @@ export const createInterviewSchema = z.object({
     ),
 });
 
+export const createCustomInterviewerSchema = z.object({
+  name: z
+    .string()
+    .min(1, 'Name is required')
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, 'Name must be less than 50 characters'),
+  title: z
+    .string()
+    .min(1, 'Title is required')
+    .max(100, 'Title must be less than 100 characters'),
+  description: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || val.length <= 500,
+      'Description must be less than 500 characters'
+    ),
+  specialties: z
+    .array(z.string())
+    .min(1, 'At least one specialty is required')
+    .max(5, 'Maximum 5 specialties allowed'),
+  experience: z.string().min(1, 'Experience level is required'),
+});
+
+export const updateCustomInterviewerSchema = z.object({
+  name: z
+    .string()
+    .min(1, 'Name is required')
+    .min(2, 'Name must be at least 2 characters')
+    .max(50, 'Name must be less than 50 characters')
+    .optional(),
+  title: z
+    .string()
+    .min(1, 'Title is required')
+    .max(100, 'Title must be less than 100 characters')
+    .optional(),
+  description: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || val.length <= 500,
+      'Description must be less than 500 characters'
+    ),
+  specialties: z
+    .array(z.string())
+    .min(1, 'At least one specialty is required')
+    .max(5, 'Maximum 5 specialties allowed')
+    .optional(),
+  experience: z.string().min(1, 'Experience level is required').optional(),
+});
+
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 export type CreateInterviewFormData = z.infer<typeof createInterviewSchema>;
+export type CreateCustomInterviewerFormData = z.infer<
+  typeof createCustomInterviewerSchema
+>;
+export type UpdateCustomInterviewerFormData = z.infer<
+  typeof updateCustomInterviewerSchema
+>;

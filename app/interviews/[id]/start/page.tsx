@@ -10,7 +10,7 @@ import { Mic, MicOff, Code, Grid3X3 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import AI_AGENT from '@/components/interviews/ai-agent';
 import { vapi } from '@/lib/vapi.sdk';
-import { interviewer } from '@/constants';
+import { Lulu } from '@/constants';
 import { InterviewQuestion } from '@/lib/types/interview.types';
 import toastService from '@/lib/services/toast.service';
 import { InfoIcon } from 'lucide-react';
@@ -170,7 +170,7 @@ export default function StartInterviewPage() {
         .join('\n');
     }
 
-    const call = await vapi.start(interviewer, {
+    const call = await vapi.start(Lulu, {
       variableValues: {
         questions: formattedQuestions,
       },

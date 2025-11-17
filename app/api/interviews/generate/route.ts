@@ -134,10 +134,7 @@ Please return only the questions, without any additional text.
       .single();
 
     if (insertUserError) {
-      console.error(
-        'Failed to insert user_interview attempt:',
-        insertUserError
-      );
+      console.error('Failed to insert user_interview', insertUserError);
       return ApiResponseBuilder.error(
         'Failed to save user interview attempt',
         'UNKNOWN_ERROR',
