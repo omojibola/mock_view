@@ -41,7 +41,7 @@ export default function InterviewsPage() {
   };
 
   const handleTakeInterview = (id: string) => {
-    router.push(`/interviews/${id}/select-interviewer`);
+    router.push(`/interviews/${id}/start`);
   };
 
   const handleViewResults = (id: string) => {
