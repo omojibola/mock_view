@@ -123,7 +123,7 @@ export default function CreateInterviewPage() {
                 theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
               }`}
             >
-              Choose how you'd like to create your interview
+              Choose how you&apos;d like to create your interview
             </p>
           </div>
 
