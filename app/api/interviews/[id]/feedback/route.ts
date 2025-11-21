@@ -97,7 +97,7 @@ export async function POST(
 
     const { interviews_kv: interviewDetails } = interviewData;
     const { object: feedback } = await generateObject({
-      model: openai('gpt-4o'),
+      model: openai('gpt-5-nano'),
       schema: feedbackSchema,
       prompt: `
         Analyze this job interview performance and provide detailed feedback.
@@ -118,7 +118,7 @@ export async function POST(
 
         Please provide:
         1. A total score out of 100
-        2. Question by question analysis, returning each interview question, the users response to the question, your feedback for the question and a suggested improved response. Skip questions where no response was priovided
+        2. Question by question analysis, returning each interview question, the users response to the question, your feedback for the question and your own improved response to the question. Skip questions where no response was provided
         3. Key strengths demonstrated
         4. Areas for improvement with specific suggestions
         5. A comprehensive final assessment, do not address user by name or gender, just say the candidate

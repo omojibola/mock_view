@@ -368,11 +368,11 @@ export default function FeedbackPage() {
                         : 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400'
                     }`}
                   >
-                    {feedback.totalScore >= 90
+                    {feedback.totalScore >= 80
                       ? 'Excellent'
-                      : feedback.totalScore >= 80
-                      ? 'Good'
                       : feedback.totalScore >= 70
+                      ? 'Good'
+                      : feedback.totalScore >= 60
                       ? 'Average'
                       : 'Needs Improvement'}
                   </Badge>

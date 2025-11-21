@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     // 3. If not cached, call AI
     // -----------------------------
     if (!kvData) {
-      const prompt = `Prepare questions for a job interview.
+      const prompt = `Search the web for common interview questions and Prepare questions for a job interview.
 The job role is ${jobTitle}.
 The job experience level is ${experienceLevel}.
 The job description is: ${jobDescription}.
@@ -73,7 +73,7 @@ Please return only the questions, without any additional text.
         ["Question 1", "Question 2", "Question 3"]`;
 
       const { text } = await generateText({
-        model: openai('gpt-4o'),
+        model: openai('gpt-5-nano'),
         prompt,
         temperature: 0.7,
       });

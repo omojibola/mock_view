@@ -34,7 +34,7 @@ export default function DashboardPage() {
   };
 
   const handleRetakeInterview = (id: string) => {
-    router.push(`/interviews/${id}/start`);
+    router.push(`/interviews/${id}/select-interviewer`);
   };
 
   const handleViewFeedback = (id: string) => {

@@ -44,6 +44,8 @@ import {
   ArrowUpCircle,
   ArrowDownCircle,
   Settings,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import toastService from '@/lib/services/toast.service';
 import type { CreditTransaction } from '@/lib/types/billing.types';
@@ -139,13 +141,18 @@ export default function BillingPage() {
   const router = useRouter();
   const isMobile = useIsMobile();
   const [credits, setCredits] = useState(0);
-  const [purchasing, setPurchasing] = useState<number | null>(null);
+  const [purchasing] = useState<number | null>(null);
   const [transactions, setTransactions] = useState<CreditTransaction[]>([]);
   const [loadingTransactions, setLoadingTransactions] = useState(true);
   const [customModalOpen, setCustomModalOpen] = useState(false);
   const [paymentStatusModal, setPaymentStatusModal] = useState<
     'success' | 'cancelled' | null
   >(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [filterType, setFilterType] = useState<'all' | 'credit' | 'debit'>(
+    'all'
+  );
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -168,6 +175,12 @@ export default function BillingPage() {
     }
   }, [user, loading, router]);
 
+  useEffect(() => {
+    if (user) {
+      fetchTransactions();
+    }
+  }, [currentPage, filterType, user]);
+
   const fetchCredits = async () => {
     try {
       const response = await fetch('/api/billing/credits');
@@ -183,10 +196,16 @@ export default function BillingPage() {
   const fetchTransactions = async () => {
     try {
       setLoadingTransactions(true);
-      const response = await fetch('/api/billing/transactions');
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: '10',
+        type: filterType,
+      });
+      const response = await fetch(`/api/billing/transactions?${params}`);
       const data = await response.json();
       if (data.success) {
-        setTransactions(data.data);
+        setTransactions(data.data.transactions);
+        setTotalPages(data?.data?.pagination?.totalPages);
       }
     } catch (error) {
       console.error('Error fetching transactions:', error);
@@ -194,32 +213,6 @@ export default function BillingPage() {
       setLoadingTransactions(false);
     }
   };
-
-  //   const purchaseCredits = async (creditAmount: number) => {
-  //     setPurchasing(creditAmount);
-  //     try {
-  //       const response = await fetch('/api/billing/credits', {
-  //         method: 'POST',
-  //         headers: { 'Content-Type': 'application/json' },
-  //         body: JSON.stringify({ credits: creditAmount }),
-  //       });
-
-  //       const data = await response.json();
-  //       if (data.success) {
-  //         setCredits(data.data.credits);
-  //         fetchTransactions();
-  //         toastService.success(`Successfully purchased ${creditAmount} credits!`);
-  //         setCustomModalOpen(false);
-  //       } else {
-  //         toastService.error('Failed to purchase credits');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error purchasing credits:', error);
-  //       toastService.error('Failed to purchase credits');
-  //     } finally {
-  //       setPurchasing(null);
-  //     }
-  //   };
 
   const purchaseCredits = async (credits: number) => {
     try {
@@ -243,6 +236,7 @@ export default function BillingPage() {
   const getTransactionIcon = (type: string) => {
     switch (type) {
       case 'CREDIT':
+      case 'REFUND':
         return <ArrowUpCircle className='h-4 w-4 text-green-500' />;
       case 'DEBIT':
         return <ArrowDownCircle className='h-4 w-4 text-red-500' />;
@@ -255,11 +249,17 @@ export default function BillingPage() {
     switch (type) {
       case 'CREDIT':
         return 'Credit Purchase';
+      case 'REFUND':
+        return 'Credit Refund';
       case 'DEBIT':
         return 'Interview Credit Used';
       default:
         return type;
     }
+  };
+
+  const getTransactionSymbol = (type: string) => {
+    return type === 'CREDIT' || type === 'REFUND' ? '+' : '-';
   };
 
   const closePaymentStatusModal = () => {
@@ -586,67 +586,141 @@ export default function BillingPage() {
             <CardDescription>Your recent credit transactions</CardDescription>
           </CardHeader>
           <CardContent>
+            <div className='flex items-center gap-2 mb-4 border-b border-border'>
+              <button
+                onClick={() => {
+                  setFilterType('all');
+                  setCurrentPage(1);
+                }}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  filterType === 'all'
+                    ? 'text-foreground border-b-2 border-cyan-500'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                All Transactions
+              </button>
+              <button
+                onClick={() => {
+                  setFilterType('credit');
+                  setCurrentPage(1);
+                }}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  filterType === 'credit'
+                    ? 'text-foreground border-b-2 border-green-500'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Credits
+              </button>
+              <button
+                onClick={() => {
+                  setFilterType('debit');
+                  setCurrentPage(1);
+                }}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  filterType === 'debit'
+                    ? 'text-foreground border-b-2 border-red-500'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Debits
+              </button>
+            </div>
             {loadingTransactions ? (
               <div className='flex items-center justify-center py-8'>
                 <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-400'></div>
               </div>
-            ) : transactions.length === 0 ? (
+            ) : transactions?.length === 0 ? (
               <div className='text-center py-8 text-muted-foreground'>
                 <History className='h-12 w-12 mx-auto mb-4 opacity-50' />
-                <p>No transactions yet</p>
-                <p className='text-sm'>
-                  Your credit purchases and usage will appear here
-                </p>
+                <p>No data found</p>
+                <p className='text-sm'>Your transactions will appear here</p>
               </div>
             ) : (
-              <div className='space-y-4'>
-                {transactions.map((transaction) => (
-                  <div
-                    key={transaction.id}
-                    className={`${
-                      theme === 'dark' && 'border-gray-800'
-                    } flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors`}
-                  >
-                    <div className='flex items-center gap-3'>
-                      {getTransactionIcon(transaction.type)}
-                      <div>
-                        <div className='font-medium text-sm text-foreground'>
-                          {formatTransactionType(transaction.type)}
+              <>
+                <div className='space-y-4'>
+                  {transactions?.map((transaction) => (
+                    <div
+                      key={transaction.id}
+                      className={`${
+                        theme === 'dark' && 'border-gray-800'
+                      } flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors`}
+                    >
+                      <div className='flex items-center gap-3'>
+                        {getTransactionIcon(transaction.type)}
+                        <div>
+                          <div className='font-medium text-sm text-foreground'>
+                            {formatTransactionType(transaction.type)}
+                          </div>
+                          <div className='text-sm text-muted-foreground'>
+                            {transaction.description}
+                          </div>
+                          <div className='text-xs text-muted-foreground'>
+                            {new Date(transaction.createdAt).toLocaleDateString(
+                              'en-US',
+                              {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              }
+                            )}
+                          </div>
                         </div>
-                        <div className='text-sm text-muted-foreground'>
-                          {transaction.description}
-                        </div>
-                        <div className='text-xs text-muted-foreground'>
-                          {new Date(transaction.createdAt).toLocaleDateString(
-                            'en-US',
-                            {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            }
-                          )}
+                      </div>
+                      <div className='text-right'>
+                        <div
+                          className={`font-semibold ${
+                            transaction.type === 'CREDIT'
+                              ? 'text-green-600 dark:text-green-400'
+                              : transaction.type === 'DEBIT'
+                              ? 'text-red-600 dark:text-red-400'
+                              : 'text-blue-600 dark:text-blue-400'
+                          }`}
+                        >
+                          {getTransactionSymbol(transaction.type)}
+                          {Math.abs(transaction.amount)} credits
                         </div>
                       </div>
                     </div>
-                    <div className='text-right'>
-                      <div
-                        className={`font-semibold ${
-                          transaction.type === 'CREDIT'
-                            ? 'text-green-600 dark:text-green-400'
-                            : transaction.type === 'DEBIT'
-                            ? 'text-red-600 dark:text-red-400'
-                            : 'text-blue-600 dark:text-blue-400'
-                        }`}
+                  ))}
+                </div>
+                {totalPages > 1 && (
+                  <div className='flex items-center justify-between mt-6 pt-4 border-t border-border'>
+                    <p className='text-sm text-muted-foreground'>
+                      Page {currentPage} of {totalPages}
+                    </p>
+                    <div className='flex items-center gap-2'>
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        onClick={() =>
+                          setCurrentPage((prev) => Math.max(1, prev - 1))
+                        }
+                        disabled={currentPage === 1}
                       >
-                        {transaction.type === 'CREDIT' ? '+' : '-'}
-                        {Math.abs(transaction.amount)} credits
-                      </div>
+                        <ChevronLeft className='h-4 w-4' />
+                        Previous
+                      </Button>
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        onClick={() =>
+                          setCurrentPage((prev) =>
+                            Math.min(totalPages, prev + 1)
+                          )
+                        }
+                        disabled={currentPage === totalPages}
+                      >
+                        Next
+                        <ChevronRight className='h-4 w-4' />
+                      </Button>
                     </div>
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             )}
           </CardContent>
         </Card>

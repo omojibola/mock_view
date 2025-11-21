@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import { Button } from '@/components/ui/button';
 import { CardContent } from '@/components/ui/card';
@@ -10,7 +10,7 @@ import { Mic, MicOff, Code, Grid3X3 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import AI_AGENT from '@/components/interviews/ai-agent';
 import { vapi } from '@/lib/vapi.sdk';
-import { Lulu } from '@/constants';
+import { Joseph, Lulu } from '@/constants';
 import { InterviewQuestion } from '@/lib/types/interview.types';
 import toastService from '@/lib/services/toast.service';
 import { InfoIcon } from 'lucide-react';
@@ -45,6 +45,8 @@ export default function StartInterviewPage() {
   const router = useRouter();
   const { user } = useAuth();
   const interviewId = params.id as string;
+  const searchParams = useSearchParams();
+  const interviewer = searchParams.get('interviewer');
 
   const [showChat, setShowChat] = useState(false);
 
@@ -57,13 +59,18 @@ export default function StartInterviewPage() {
     questions: [],
     type: '',
   });
-
+  console.log(interviewer);
   enum CallStatus {
     INACTIVE = 'INACTIVE',
     CONNECTING = 'CONNECTING',
     ACTIVE = 'ACTIVE',
     FINISHED = 'FINISHED',
   }
+
+  const interviewers = {
+    Joseph: Joseph,
+    Lulu: Lulu,
+  };
 
   const [isMuted, setIsMuted] = useState(false);
   const [generatingFeedback, setGeneratingFeedback] = useState(false);
@@ -139,56 +146,88 @@ export default function StartInterviewPage() {
   const handleStartCall = async () => {
     if (hasInsufficientCredits) {
       toastService.error(
-        'Insufficient credits. Please purchase more credits to start the interview.'
+        'Insufficient credits. Please purchase more credits to start the interview.',
+        'Purchase',
+        () => {
+          router.push('/billing');
+        }
       );
       return;
     }
 
-    const deductResponse = await fetch('/api/billing/deduct', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ interviewId, amount: 1 }),
-    });
+    // Step 1: Deduct credit
+    let deductData;
+    try {
+      const deductResponse = await fetch('/api/billing/deduct', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ interviewId, amount: 1 }),
+      });
+      deductData = await deductResponse.json();
 
-    const deductData = await deductResponse.json();
-
-    if (!deductData.success) {
-      if (deductResponse.status === 402) {
-        toastService.error(
-          'Insufficient credits. Please purchase more credits.'
-        );
+      if (!deductData.success) {
+        if (deductResponse.status === 402) {
+          toastService.error(
+            'Insufficient credits. Please purchase more credits.'
+          );
+        } else {
+          console.error(deductData.error || 'Failed to deduct credits');
+        }
         return;
       }
-      console.error(deductData.error || 'Failed to deduct credits');
-    }
-    setCallStatus(CallStatus.CONNECTING);
-
-    let formattedQuestions = '';
-    if (interviewQuestions) {
-      formattedQuestions = interviewQuestions
-        .map((question) => `- ${question?.question}`)
-        .join('\n');
-    }
-
-    const call = await vapi.start(Lulu, {
-      variableValues: {
-        questions: formattedQuestions,
-      },
-    });
-    if (!call) {
-      setCallStatus(CallStatus.INACTIVE);
-      toastService.error('Unable to start interview session.');
+    } catch (error) {
+      console.error('Credit deduction failed:', error);
+      toastService.error('Failed to deduct credit. Please try again.');
       return;
     }
 
-    // Save call ID to DB
-    await fetch(`/api/interviews/${interviewId}/session`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ callId: call.id }),
-    });
+    setCallStatus(CallStatus.CONNECTING);
+
+    // Format interview questions
+    const formattedQuestions = interviewQuestions
+      .map((q) => `- ${q?.question}`)
+      .join('\n');
+
+    // Step 2: Start the interview call with vapi
+    try {
+      const call = await vapi.start(interviewers[interviewer || 'Joseph'], {
+        variableValues: { questions: formattedQuestions },
+      });
+
+      if (!call) {
+        throw new Error('Call could not be started');
+      }
+
+      // Step 3: Save call ID to DB
+      await fetch(`/api/interviews/${interviewId}/session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ callId: call.id }),
+      });
+    } catch (error) {
+      console.error('Failed to start call:', error);
+      setCallStatus(CallStatus.INACTIVE);
+      toastService.error('Unable to start interview session.');
+      router.back();
+
+      // Step 4: Refund credit if call failed
+      try {
+        const refundResponse = await fetch('/api/billing/refund', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ interviewId, amount: 1 }),
+        });
+        const refundData = await refundResponse.json();
+
+        if (!refundData.success) {
+          console.error({
+            refundError: refundData.error || 'Unable to refund credits',
+          });
+        }
+      } catch (refundError) {
+        console.error('Refund request failed:', refundError);
+      }
+    }
   };
 
   const generateFeedback = async () => {
@@ -259,7 +298,6 @@ export default function StartInterviewPage() {
 
     const onError = (error: Error) => {
       setCallStatus(CallStatus.FINISHED);
-      toastService.error('Unable to start interview session.');
       console.error(error);
     };
 
@@ -361,6 +399,7 @@ export default function StartInterviewPage() {
                 type={session?.type || ''}
                 questions={session.questions || []}
                 setIsSpeaking={setIsSpeaking}
+                interviewer={interviewer || 'joseph'}
               />
 
               {/* User - main large video */}

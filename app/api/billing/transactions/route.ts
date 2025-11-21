@@ -15,12 +15,33 @@ export async function GET(request: NextRequest) {
       return ApiResponseBuilder.unauthorized('Unauthorized');
     }
 
+    const searchParams = request.nextUrl.searchParams;
+    const page = Number.parseInt(searchParams.get('page') || '1');
+    const limit = Number.parseInt(searchParams.get('limit') || '10');
+    const type = searchParams.get('type'); // 'all', 'credit', 'debit'
+    const offset = (page - 1) * limit;
+
     // Fetch user transactions
-    const { data: transactions, error } = await supabase
+    let query = supabase
       .from('transactions')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
+      .select('*', { count: 'exact' })
+      .eq('user_id', user.id);
+
+    // Apply type filter
+    if (type === 'credit') {
+      query = query.in('transaction_type', ['CREDIT', 'top_up', 'REFUND']);
+    } else if (type === 'debit') {
+      query = query.in('transaction_type', ['DEBIT', 'USAGE']);
+    }
+
+    // Apply pagination and ordering
+    const {
+      data: transactions,
+      error,
+      count,
+    } = await query
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
 
     if (error) {
       console.error('Error fetching transactions:', error);
@@ -42,7 +63,15 @@ export async function GET(request: NextRequest) {
       createdAt: transaction.created_at,
     }));
 
-    return ApiResponseBuilder.success(formattedTransactions);
+    return ApiResponseBuilder.success({
+      transactions: formattedTransactions,
+      pagination: {
+        page,
+        limit,
+        total: count || 0,
+        totalPages: Math.ceil((count || 0) / limit),
+      },
+    });
   } catch (error) {
     console.error('Error in transactions route:', error);
     return ApiResponseBuilder.error(

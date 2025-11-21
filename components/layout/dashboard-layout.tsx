@@ -30,7 +30,6 @@ interface DashboardLayoutProps {
 const sidebarItems = [
   { icon: Home, label: 'Dashboard', href: '/dashboard' },
   { icon: MessageSquare, label: 'Interviews', href: '/interviews' },
-  { icon: User, label: 'My Interviewers', href: '/interviewers' },
   { icon: CreditCard, label: 'Billing', href: '/billing' },
   { icon: Settings, label: 'Settings', href: '/settings' },
 ];

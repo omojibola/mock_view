@@ -6,8 +6,13 @@ class ToastService {
     toast.success(message);
   }
 
-  error(message: string) {
-    toast.error(message);
+  error(message: string, label?: string, onClick?: () => void) {
+    toast.error(message, {
+      action: {
+        label: label,
+        onClick: onClick || (() => {}),
+      },
+    });
   }
 
   info(message: string) {

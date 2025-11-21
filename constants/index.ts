@@ -69,20 +69,18 @@ End the conversation on a polite and positive note.
   },
 };
 
-
-
 export const Joseph: CreateAssistantDTO = {
   name: 'Interviewer',
   firstMessage:
-    'Hello! My name is Joe and I will be taking your interview today, are you ready?',
+    'Hello! My name is Joseph and I will be taking your interview today, are you ready?',
   transcriber: {
     provider: 'deepgram',
     model: 'nova-2',
     language: 'en',
   },
   voice: {
-    provider: 'playht',
-    voiceId: 'z0FeJKecUNrpkaHkBfCw',
+    provider: 'vapi',
+    voiceId: 'Harry',
     speed: 0.9,
   },
   model: {
