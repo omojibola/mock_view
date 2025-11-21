@@ -59,7 +59,6 @@ export default function StartInterviewPage() {
     questions: [],
     type: '',
   });
-  console.log(interviewer);
   enum CallStatus {
     INACTIVE = 'INACTIVE',
     CONNECTING = 'CONNECTING',
