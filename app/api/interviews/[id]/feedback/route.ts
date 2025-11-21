@@ -97,7 +97,7 @@ export async function POST(
 
     const { interviews_kv: interviewDetails } = interviewData;
     const { object: feedback } = await generateObject({
-      model: openai('gpt-5-nano'),
+      model: openai('gpt-4o'),
       schema: feedbackSchema,
       prompt: `
         Analyze this job interview performance and provide detailed feedback.

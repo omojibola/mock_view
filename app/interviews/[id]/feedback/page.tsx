@@ -61,84 +61,6 @@ export default function FeedbackPage() {
     new Set()
   );
 
-  // useEffect(() => {
-  //   const fetchFeedback = async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  //       const mockFeedback: FeedbackData = {
-  //         interviewId: interviewId,
-  //         userId: 'user123',
-  //         totalScore: 82,
-  //         questionFeedbacks: [
-  //           {
-  //             question:
-  //               "Can you explain the difference between React's useEffect and useLayoutEffect hooks?",
-  //             userResponse:
-  //               'useEffect runs after the browser paints, while useLayoutEffect runs before. useLayoutEffect is useful when you need to make DOM measurements or mutations before the browser paints.',
-  //             aiScore: 9,
-  //             aiFeedback:
-  //               'Excellent answer! You correctly identified the key timing difference and provided a practical use case. Your understanding of the execution order is spot-on.',
-  //             suggestedResponse:
-  //               "useEffect runs asynchronously after the browser has painted the screen, making it suitable for most side effects like data fetching or subscriptions. useLayoutEffect, however, runs synchronously before the browser paints, which is crucial when you need to read layout from the DOM and synchronously re-render. For example, if you're measuring an element's dimensions or animating based on DOM measurements, useLayoutEffect prevents visual flicker by ensuring changes happen before the paint. However, use it sparingly as it can block visual updates.",
-  //           },
-  //           {
-  //             question:
-  //               'How would you optimize the performance of a React application with a large list of items?',
-  //             userResponse:
-  //               'I would use virtualization with libraries like react-window to only render visible items. Also implement proper memoization with useMemo and React.memo.',
-  //             aiScore: 7,
-  //             aiFeedback:
-  //               'Good answer covering two important optimization techniques. However, you could have mentioned additional strategies like pagination, debouncing search inputs, or code splitting.',
-  //             suggestedResponse:
-  //               "For optimizing large lists in React, I'd implement several strategies: 1) Virtualization using react-window or react-virtualized to render only visible items, reducing DOM nodes significantly. 2) Memoization with React.memo for list items and useMemo for expensive computations. 3) Pagination or infinite scroll to limit initial data load. 4) Debouncing search/filter inputs to reduce re-renders. 5) Key prop optimization to help React's reconciliation. 6) Consider moving list state to a state management library like Redux or Zustand for better performance. 7) Code splitting to lazy load the list component if it's not immediately needed.",
-  //           },
-  //           {
-  //             question:
-  //               'Describe your experience with TypeScript and how it improves code quality.',
-  //             userResponse:
-  //               'TypeScript adds type safety which catches errors during development. It makes code more maintainable and easier to refactor.',
-  //             aiScore: 6,
-  //             aiFeedback:
-  //               'Your answer touches on important benefits but lacks depth and specific examples. Consider mentioning IDE support, documentation value, and real-world scenarios where TypeScript prevented bugs.',
-  //             suggestedResponse:
-  //               'TypeScript significantly improves code quality through several mechanisms: 1) Type safety catches errors at compile-time rather than runtime, preventing common bugs like undefined property access or incorrect function arguments. 2) Enhanced IDE support with intelligent autocomplete and refactoring tools increases developer productivity. 3) Self-documenting code through type definitions reduces the need for separate documentation. 4) Better refactoring confidence - when changing interfaces, TypeScript immediately shows all affected code. 5) Improved team collaboration as type definitions serve as a contract between different parts of the codebase. In my experience, TypeScript has prevented numerous production bugs, especially in large codebases where understanding all data flows is challenging.',
-  //           },
-  //         ],
-  //         overallStrengths: [
-  //           'Strong technical knowledge of React fundamentals',
-  //           'Good understanding of performance optimization concepts',
-  //           'Clear and concise communication style',
-  //         ],
-  //         overallImprovements: [
-  //           'Provide more specific examples from personal experience',
-  //           'Elaborate on answers with additional context and edge cases',
-  //           'Demonstrate deeper understanding of advanced concepts',
-  //         ],
-  //         finalAssessment:
-  //           'Overall solid performance demonstrating good foundational knowledge of React and TypeScript. The candidate shows promise with room for growth in providing more comprehensive and detailed responses. With more real-world experience and deeper exploration of advanced topics, this candidate would be well-suited for mid to senior-level positions.',
-  //         createdAt: new Date().toISOString(),
-  //         interviewTitle: 'Senior Frontend Developer Interview',
-  //         duration: 45,
-  //         type: 'technical',
-  //       };
-
-  //       setFeedback(mockFeedback);
-  //       setTimeout(() => {
-  //         setShowFeedbackModal(true);
-  //       }, 7000);
-  //       setShowFloatingWidget(true);
-  //     } catch (error) {
-  //       setError('Failed to load feedback data');
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchFeedback();
-  // }, [interviewId]);
-
   useEffect(() => {
     const fetchFeedback = async () => {
       try {
@@ -149,7 +71,6 @@ export default function FeedbackPage() {
         }
         const feedbackData: { success: boolean; data: FeedbackData } =
           await response.json();
-        console.log(feedbackData);
         setFeedback(feedbackData?.data);
         setTimeout(() => {
           setShowFeedbackModal(true);

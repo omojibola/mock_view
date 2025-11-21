@@ -193,11 +193,11 @@ public:
     setIsInterviewEnding(true);
 
     try {
-      console.log('[v0] Auto-submitting interview with current progress');
+      console.log('Auto-submitting interview with current progress');
 
       router.push(`/interviews/${interviewId}/feedback`);
     } catch (error) {
-      console.error('[v0] Error ending interview:', error);
+      console.error(' Error ending interview:', error);
       router.push(`/interviews/${interviewId}/feedback`);
     }
   };

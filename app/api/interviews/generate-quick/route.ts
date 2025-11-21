@@ -104,7 +104,7 @@ Please return only the questions, without any additional text.
         ["Question 1", "Question 2", "Question 3"]`;
 
   const { text: questions } = await generateText({
-    model: openai('gpt-5-nano'),
+    model: openai('gpt-4o'),
     prompt: questionsPrompt,
     temperature: 0.7,
   });
