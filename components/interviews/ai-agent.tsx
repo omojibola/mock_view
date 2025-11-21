@@ -17,9 +17,10 @@ interface AI_AGENTProps {
     | '';
   questions: string[];
   setIsSpeaking: (isSpeaking: 'user' | 'ai' | null) => void;
+  interviewer: string;
 }
 
-const AI_AGENT = ({ isSpeaking }: AI_AGENTProps) => {
+const AI_AGENT = ({ isSpeaking, interviewer }: AI_AGENTProps) => {
   return (
     <div className='absolute top-4 left-4 w-64 h-48 z-10'>
       <div className='h-full bg-gray-800 border-gray-600 overflow-hidden rounded-lg'>
@@ -41,7 +42,7 @@ const AI_AGENT = ({ isSpeaking }: AI_AGENTProps) => {
           </div>
           <div className='absolute bottom-2 left-2'>
             <div className='px-2 py-1 bg-black/70 text-white rounded text-xs font-medium'>
-              Lulu
+              {interviewer}
             </div>
           </div>
         </CardContent>

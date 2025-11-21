@@ -7,11 +7,12 @@ import { ApiResponseBuilder } from '@/lib/utils/response';
 
 const feedbackSchema = z.object({
   totalScore: z.number().min(0).max(100),
-  categoryScores: z.array(
+  questionAnalysis: z.array(
     z.object({
-      category: z.string(),
-      score: z.number().min(0).max(100),
-      maxScore: z.number().default(100),
+      question: z.string(),
+      userResponse: z.string(),
+      feedback: z.string(),
+      suggestedImprovement: z.string(),
     })
   ),
   strengths: z.array(z.string()),
@@ -96,7 +97,7 @@ export async function POST(
 
     const { interviews_kv: interviewDetails } = interviewData;
     const { object: feedback } = await generateObject({
-      model: openai('gpt-4o'),
+      model: openai('gpt-5-nano'),
       schema: feedbackSchema,
       prompt: `
         Analyze this job interview performance and provide detailed feedback.
@@ -117,7 +118,7 @@ export async function POST(
 
         Please provide:
         1. A total score out of 100
-        2. Category-specific scores for: Communication, Technical Knowledge, Problem Solving, Cultural Fit, and Experience Relevance, only return technical knowledge if job details type is technical
+        2. Question by question analysis, returning each interview question, the users response to the question, your feedback for the question and your own improved response to the question. Skip questions where no response was provided
         3. Key strengths demonstrated
         4. Areas for improvement with specific suggestions
         5. A comprehensive final assessment, do not address user by name or gender, just say the candidate
@@ -137,7 +138,7 @@ export async function POST(
       user_id: user.id,
       interview_kv_key: interviewData.interview_kv_key,
       total_score: feedback.totalScore,
-      category_scores: feedback.categoryScores,
+      question_analysis: feedback.questionAnalysis,
       strengths: feedback.strengths,
       areas_for_improvement: feedback.areasForImprovement,
       final_assessment: feedback.finalAssessment,
@@ -171,7 +172,7 @@ export async function POST(
       interviewId,
       userId: user.id,
       totalScore: feedback.totalScore,
-      categoryScores: feedback.categoryScores,
+      questionAnalysis: feedback.questionAnalysis,
       strengths: feedback.strengths,
       areasForImprovement: feedback.areasForImprovement,
       finalAssessment: feedback.finalAssessment,
@@ -258,7 +259,7 @@ export async function GET(
       userId: feedback.user_id,
       attemptId: feedback.attempt_id,
       totalScore: feedback.total_score,
-      categoryScores: feedback.category_scores,
+      question_analysis: feedback.question_analysis,
       strengths: feedback.strengths,
       areasForImprovement: feedback.areas_for_improvement,
       finalAssessment: feedback.final_assessment,

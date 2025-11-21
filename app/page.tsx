@@ -126,6 +126,12 @@ export default function LandingPage() {
                 variant='outline'
                 size='lg'
                 className='text-sm px-8 py-6 bg-transparent rounded-full'
+                onClick={() =>
+                  window.open(
+                    'https://www.loom.com/share/b0f1e42a58e44a65a0b0c38515f6be4d?sid=cec91ce5-6fe7-4be7-9e09-321f0d771ba1',
+                    '_blank'
+                  )
+                }
               >
                 Watch Demo
               </Button>
