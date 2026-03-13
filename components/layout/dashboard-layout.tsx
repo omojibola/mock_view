@@ -20,6 +20,7 @@ import {
   User,
   CreditCard,
   Coins,
+  History,
 } from 'lucide-react';
 import Logo from '../logo/logo';
 
@@ -30,6 +31,7 @@ interface DashboardLayoutProps {
 const sidebarItems = [
   { icon: Home, label: 'Dashboard', href: '/dashboard' },
   { icon: MessageSquare, label: 'Interviews', href: '/interviews' },
+  { icon: History, label: 'Interview Sessions', href: '/interview-sessions' },
   { icon: CreditCard, label: 'Billing', href: '/billing' },
   { icon: Settings, label: 'Settings', href: '/settings' },
 ];

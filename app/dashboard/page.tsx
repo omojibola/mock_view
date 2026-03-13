@@ -5,27 +5,53 @@ import { useRouter } from 'next/navigation';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { InterviewCard } from '@/components/dashboard/interview-card';
+import { PerformanceOverview } from '@/components/dashboard/performance-overview';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useTheme } from '@/lib/contexts/theme-context';
 import { Plus, MessageSquare } from 'lucide-react';
-import type { InterviewCard as InterviewCardType } from '@/lib/types/interview.types';
+import type {
+  DashboardConfidenceSummary,
+  InterviewCard as InterviewCardType,
+} from '@/lib/types/interview.types';
+import type { ApiResponse } from '@/lib/types/api.types';
 
 export default function DashboardPage() {
+  const RECENT_INTERVIEWS_LIMIT = 3;
   const { user } = useAuth();
   const { theme } = useTheme();
   const router = useRouter();
   const [interviews, setInterviews] = useState<InterviewCardType[]>([]);
+  const [performance, setPerformance] =
+    useState<DashboardConfidenceSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchInterviews = async () => {
-      setIsLoading(true);
-      const response = await fetch('/api/interviews');
-      const data = await response.json();
-      setInterviews(data.data || []);
-      setIsLoading(false);
+      try {
+        setIsLoading(true);
+
+        const [interviewsResponse, performanceResponse] = await Promise.all([
+          fetch('/api/interviews'),
+          fetch('/api/dashboard/performance'),
+        ]);
+
+        const interviewsData: ApiResponse<InterviewCardType[]> =
+          await interviewsResponse.json();
+        const performanceData: ApiResponse<DashboardConfidenceSummary> =
+          await performanceResponse.json();
+
+        setInterviews(interviewsData.data || []);
+        setPerformance(performanceData.data || null);
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+        setInterviews([]);
+        setPerformance(null);
+      } finally {
+        setIsLoading(false);
+      }
     };
+
     fetchInterviews();
   }, []);
 
@@ -71,7 +97,6 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          {/* Call to Action */}
           <div
             className={`bg-gradient-to-r from-cyan-400/10 to-blue-500/10 border border-cyan-400/20 rounded-lg p-6 mb-8 ${
               theme === 'light'
@@ -114,6 +139,10 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          <div className='mb-8'>
+            <PerformanceOverview data={performance} isLoading={isLoading} />
+          </div>
+
           {/* Recent Interviews */}
           <div>
             <div className='flex items-center justify-between mb-6'>
@@ -148,7 +177,9 @@ export default function DashboardPage() {
               </div>
             ) : interviews.length > 0 ? (
               <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                {interviews.map((interview) => (
+                {interviews
+                  .slice(0, RECENT_INTERVIEWS_LIMIT)
+                  .map((interview) => (
                   <InterviewCard
                     key={interview.id}
                     interview={interview}

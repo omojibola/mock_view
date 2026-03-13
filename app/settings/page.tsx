@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,6 +8,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { useTheme } from '@/lib/contexts/theme-context';
 import authService from '@/lib/services/auth.service';
 import toastService from '@/lib/services/toast.service';
+import { ND_TYPE_OPTIONS } from '@/lib/constants/nd-types';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { User, Lock, Eye, EyeOff } from 'lucide-react';
 
@@ -32,6 +40,10 @@ const nameSchema = z.object({
 
 const emailSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
+});
+
+const ndTypeSchema = z.object({
+  ndType: z.string().min(1, 'Please select your ND type'),
 });
 
 const passwordSchema = z
@@ -47,6 +59,7 @@ const passwordSchema = z
 
 type NameFormData = z.infer<typeof nameSchema>;
 type EmailFormData = z.infer<typeof emailSchema>;
+type NdTypeFormData = z.infer<typeof ndTypeSchema>;
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
 export default function SettingsPage() {
@@ -57,6 +70,7 @@ export default function SettingsPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isUpdatingName, setIsUpdatingName] = useState(false);
   const [isUpdatingEmail, setIsUpdatingEmail] = useState(false);
+  const [isUpdatingNdType, setIsUpdatingNdType] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
   const nameForm = useForm<NameFormData>({
@@ -73,6 +87,13 @@ export default function SettingsPage() {
     },
   });
 
+  const ndTypeForm = useForm<NdTypeFormData>({
+    resolver: zodResolver(ndTypeSchema),
+    defaultValues: {
+      ndType: user?.ndType || '',
+    },
+  });
+
   const passwordForm = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema),
     defaultValues: {
@@ -81,6 +102,22 @@ export default function SettingsPage() {
       confirmPassword: '',
     },
   });
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    nameForm.reset({
+      fullName: user.fullName || '',
+    });
+    emailForm.reset({
+      email: user.email || '',
+    });
+    ndTypeForm.reset({
+      ndType: user.ndType || '',
+    });
+  }, [user, nameForm, emailForm, ndTypeForm]);
 
   const handleNameUpdate = async (data: NameFormData) => {
     setIsUpdatingName(true);
@@ -117,6 +154,26 @@ export default function SettingsPage() {
       toastService.error('An unexpected error occurred');
     } finally {
       setIsUpdatingEmail(false);
+    }
+  };
+
+  const handleNdTypeUpdate = async (data: NdTypeFormData) => {
+    setIsUpdatingNdType(true);
+    try {
+      const result = await authService.updateProfile({
+        ndType: data.ndType,
+      });
+      if (result.success) {
+        toastService.success('ND type updated successfully');
+        ndTypeForm.reset(data);
+      } else {
+        toastService.error(result.error || 'Failed to update ND type');
+      }
+    } catch (error) {
+      console.log(error);
+      toastService.error('An unexpected error occurred');
+    } finally {
+      setIsUpdatingNdType(false);
     }
   };
 
@@ -278,6 +335,86 @@ export default function SettingsPage() {
                     }`}
                   >
                     {isUpdatingEmail ? 'Updating...' : 'Update Email'}
+                  </Button>
+                </form>
+
+                <Separator
+                  className={theme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'}
+                />
+
+                <form
+                  onSubmit={ndTypeForm.handleSubmit(handleNdTypeUpdate)}
+                  className='space-y-4'
+                >
+                  <div>
+                    <Label
+                      htmlFor='ndType'
+                      className={`text-xs font-medium ${
+                        theme === 'dark' ? 'text-white' : 'text-black'
+                      }`}
+                    >
+                      ND Type
+                    </Label>
+                    <p
+                      className={`mt-1 text-xs ${
+                        theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                      }`}
+                    >
+                      This helps us reduce avoidable bias and interpret
+                      interview performance more fairly.
+                    </p>
+                    <Select
+                      value={ndTypeForm.watch('ndType')}
+                      onValueChange={(value) =>
+                        ndTypeForm.setValue('ndType', value, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        })
+                      }
+                    >
+                      <SelectTrigger
+                        id='ndType'
+                        className={`mt-2 w-full text-xs ${
+                          theme === 'dark'
+                            ? 'bg-gray-800 border-gray-700 text-white'
+                            : 'bg-white border-gray-300 text-black'
+                        }`}
+                      >
+                        <SelectValue placeholder='Select your ND type' />
+                      </SelectTrigger>
+                      <SelectContent
+                        className={
+                          theme === 'dark'
+                            ? 'bg-gray-900 border-gray-800 text-white'
+                            : 'bg-white border-gray-200 text-black'
+                        }
+                      >
+                        {ND_TYPE_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {ndTypeForm.formState.errors.ndType && (
+                      <p className='text-red-400 text-xs mt-1'>
+                        {ndTypeForm.formState.errors.ndType.message}
+                      </p>
+                    )}
+                  </div>
+                  <Button
+                    type='submit'
+                    disabled={
+                      isUpdatingNdType || !ndTypeForm.formState.isDirty
+                    }
+                    size='sm'
+                    className={`text-xs ${
+                      theme === 'dark'
+                        ? 'bg-white text-black hover:bg-gray-100'
+                        : 'bg-black text-white hover:bg-gray-800'
+                    }`}
+                  >
+                    {isUpdatingNdType ? 'Updating...' : 'Update ND Type'}
                   </Button>
                 </form>
               </CardContent>

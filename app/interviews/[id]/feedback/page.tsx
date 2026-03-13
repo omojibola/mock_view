@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ProtectedRoute } from '@/components/auth/protected-route';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { Button } from '@/components/ui/button';
@@ -28,10 +28,12 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { QuestionFeedback } from '@/lib/types/interviewer.types';
+import type { ConfidenceCheckin } from '@/lib/types/interview.types';
 
 interface FeedbackData {
   interviewId: string;
   userId: string;
+  attemptNumber: number;
   totalScore: number;
   question_analysis: QuestionFeedback[];
   strengths: string[];
@@ -43,11 +45,34 @@ interface FeedbackData {
   type?: string;
 }
 
+const confidenceStatements = [
+  {
+    key: 'knewWhatToSay',
+    label: 'I felt I knew what I wanted to say',
+  },
+  {
+    key: 'feltUnjudged',
+    label: "I didn't feel judged during that session",
+  },
+  {
+    key: 'realInterviewReadiness',
+    label: 'I would feel okay doing a session like that in a real interview',
+  },
+  {
+    key: 'recoveredWhenStuck',
+    label: 'I recovered well when I got stuck',
+  },
+] as const;
+
+type ConfidenceStatementKey = (typeof confidenceStatements)[number]['key'];
+
 export default function FeedbackPage() {
   const { theme } = useTheme();
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const interviewId = params.id as string;
+  const attemptNumber = searchParams.get('attemptNumber');
 
   const [feedback, setFeedback] = useState<FeedbackData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,15 +82,32 @@ export default function FeedbackPage() {
   const [feedbackText, setFeedbackText] = useState('');
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const [showFloatingWidget, setShowFloatingWidget] = useState(false);
+  const [checkin, setCheckin] = useState<ConfidenceCheckin | null>(null);
+  const [isLoadingCheckin, setIsLoadingCheckin] = useState(false);
+  const [isSavingCheckin, setIsSavingCheckin] = useState(false);
+  const [checkinError, setCheckinError] = useState<string | null>(null);
   const [expandedQuestions, setExpandedQuestions] = useState<Set<number>>(
     new Set()
   );
+  const [confidenceForm, setConfidenceForm] = useState<
+    Record<ConfidenceStatementKey, number>
+  >({
+    knewWhatToSay: 0,
+    feltUnjudged: 0,
+    realInterviewReadiness: 0,
+    recoveredWhenStuck: 0,
+  });
 
   useEffect(() => {
     const fetchFeedback = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/interviews/${interviewId}/feedback`);
+        const query = attemptNumber
+          ? `?attemptNumber=${attemptNumber}`
+          : '';
+        const response = await fetch(
+          `/api/interviews/${interviewId}/feedback${query}`
+        );
         if (!response.ok) {
           toast.error('Failed to fetch feedback');
         }
@@ -85,7 +127,42 @@ export default function FeedbackPage() {
     };
 
     fetchFeedback();
-  }, [interviewId]);
+  }, [attemptNumber, interviewId]);
+
+  useEffect(() => {
+    const fetchCheckin = async () => {
+      if (!feedback?.attemptNumber) {
+        return;
+      }
+
+      setIsLoadingCheckin(true);
+      setCheckinError(null);
+
+      try {
+        const response = await fetch(
+          `/api/confidence-checkins?interviewId=${feedback.interviewId}&attemptNumber=${feedback.attemptNumber}`
+        );
+        const result = await response.json();
+
+        if (!response.ok) {
+          setCheckinError('Failed to load confidence check-in');
+          return;
+        }
+
+        if (result.data) {
+          setCheckin(result.data);
+          setConfidenceForm(result.data.statements);
+        }
+      } catch (error) {
+        console.error('Failed to fetch confidence check-in:', error);
+        setCheckinError('Failed to load confidence check-in');
+      } finally {
+        setIsLoadingCheckin(false);
+      }
+    };
+
+    fetchCheckin();
+  }, [feedback]);
 
   const handleSubmitFeedback = async () => {
     setIsSubmittingFeedback(true);
@@ -126,6 +203,63 @@ export default function FeedbackPage() {
       }
       return newSet;
     });
+  };
+
+  const handleConfidenceChange = (
+    key: ConfidenceStatementKey,
+    value: number
+  ) => {
+    setConfidenceForm((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const handleSaveConfidenceCheckin = async () => {
+    if (!feedback?.attemptNumber) {
+      return;
+    }
+
+    const hasMissingValue = Object.values(confidenceForm).some(
+      (value) => value < 1
+    );
+
+    if (hasMissingValue) {
+      setCheckinError('Rate each statement before saving.');
+      return;
+    }
+
+    setIsSavingCheckin(true);
+    setCheckinError(null);
+
+    try {
+      const response = await fetch('/api/confidence-checkins', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          interviewId: feedback.interviewId,
+          attemptNumber: feedback.attemptNumber,
+          statements: confidenceForm,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        setCheckinError('Failed to save confidence check-in.');
+        return;
+      }
+
+      setCheckin(result.data);
+      toast.success('Confidence check-in saved');
+    } catch (error) {
+      console.error('Failed to save confidence check-in:', error);
+      setCheckinError('Failed to save confidence check-in.');
+    } finally {
+      setIsSavingCheckin(false);
+    }
   };
 
   const StarRating = ({
@@ -305,6 +439,117 @@ export default function FeedbackPage() {
                     Interview
                   </Badge>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card
+            className={`${
+              theme === 'dark'
+                ? 'bg-gray-800 border-gray-700'
+                : 'bg-white border-gray-200'
+            }`}
+          >
+            <CardContent className='p-5 space-y-4'>
+              <div className='flex items-start justify-between gap-4'>
+                <div>
+                  <h2
+                    className={`text-md font-semibold ${
+                      theme === 'dark' ? 'text-white' : 'text-gray-900'
+                    }`}
+                  >
+                    Confidence check-in
+                  </h2>
+                  <p
+                    className={`mt-1 text-sm ${
+                      theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                    }`}
+                  >
+                    This is not a single confidence score. Rate the statements
+                    below so the dashboard can track how your self-belief shifts
+                    alongside your performance over time.
+                  </p>
+                </div>
+                {checkin ? (
+                  <Badge className='bg-cyan-100 text-cyan-700 dark:bg-cyan-900/20 dark:text-cyan-400'>
+                    Saved
+                  </Badge>
+                ) : null}
+              </div>
+
+              <div className='space-y-4'>
+                {confidenceStatements.map((statement) => (
+                  <div
+                    key={statement.key}
+                    className={`rounded-lg border p-4 ${
+                      theme === 'dark'
+                        ? 'border-gray-700 bg-gray-900/60'
+                        : 'border-gray-200 bg-gray-50'
+                    }`}
+                  >
+                    <p
+                      className={`mb-3 text-sm font-medium ${
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
+                      }`}
+                    >
+                      {statement.label}
+                    </p>
+                    <div className='flex flex-wrap gap-2'>
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <Button
+                          key={value}
+                          type='button'
+                          variant='outline'
+                          size='sm'
+                          onClick={() =>
+                            handleConfidenceChange(statement.key, value)
+                          }
+                          className={`min-w-10 ${
+                            confidenceForm[statement.key] === value
+                              ? 'border-cyan-400 bg-cyan-400/15 text-cyan-400'
+                              : theme === 'dark'
+                              ? 'border-gray-700 text-gray-300'
+                              : 'border-gray-300 text-gray-700'
+                          }`}
+                        >
+                          {value}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {checkin ? (
+                <p
+                  className={`text-sm ${
+                    theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+                  }`}
+                >
+                  Saved self-belief score: {checkin.selfBeliefScore}%.
+                </p>
+              ) : null}
+
+              {checkinError ? (
+                <p className='text-sm text-red-400'>{checkinError}</p>
+              ) : null}
+
+              <div className='flex items-center justify-between gap-4'>
+                <p
+                  className={`text-xs ${
+                    theme === 'dark' ? 'text-gray-500' : 'text-gray-500'
+                  }`}
+                >
+                  1 = strongly disagree, 5 = strongly agree
+                </p>
+                <Button
+                  type='button'
+                  onClick={handleSaveConfidenceCheckin}
+                  disabled={isSavingCheckin || isLoadingCheckin}
+                  className='bg-cyan-500 text-black hover:bg-cyan-400'
+                >
+                  {isSavingCheckin ? 'Saving...' : 'Save check-in'}
+                </Button>
               </div>
             </CardContent>
           </Card>

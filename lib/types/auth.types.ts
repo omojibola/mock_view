@@ -5,6 +5,7 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   credits?: number;
+  ndType?: string | null;
 }
 
 export interface AuthSession {
