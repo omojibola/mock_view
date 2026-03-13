@@ -100,14 +100,16 @@ export default function LandingPage() {
               className='mb-6 px-4 py-2 fade-in-element'
             >
               <Sparkles className='mr-2 h-4 w-4' />
-              AI-Powered Interview Practice
+              Mock interviews for neurodivergent candidates
             </Badge>
             <h1 className='text-4xl font-bold tracking-tight sm:text-6xl md:text-7xl fade-in-element'>
-              Master Your Next <span className='text-cyan-400'>Interview</span>
+              Practice interviews in a way that feels{' '}
+              <span className='text-cyan-400'>fair, calm, and safe</span>
             </h1>
             <p className='mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl fade-in-element'>
-              Practice with AI interviewers or connect with real professionals.
-              Get instant feedback, build confidence, and land your dream job.
+              MockView helps neurodivergent candidates build confidence through
+              bias-stripped feedback, sensory-safe practice, and tools that
+              protect autonomy while strengthening real interview performance.
             </p>
             <div className='mt-10 flex flex-col sm:flex-row gap-4 justify-center fade-in-element'>
               <Button
@@ -139,11 +141,11 @@ export default function LandingPage() {
             <div className='mt-12 flex items-center justify-center space-x-8 text-sm text-muted-foreground fade-in-element'>
               <div className='flex items-center'>
                 <CheckCircle className='mr-2 h-4 w-4 text-secondary' />
-                No credit card required
+                Confidence-first practice
               </div>
               <div className='flex items-center'>
                 <CheckCircle className='mr-2 h-4 w-4 text-secondary' />
-                Free forever plan
+                Sensory-safe by design
               </div>
             </div>
           </div>
@@ -160,38 +162,40 @@ export default function LandingPage() {
         <div className='container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           <div className='mx-auto max-w-2xl text-center mb-16 fade-in-element'>
             <h2 className='text-3xl font-bold sm:text-4xl'>
-              Everything you need to ace your interview
+              Built around six principles
             </h2>
             <p className='mt-4 text-lg text-muted-foreground'>
-              Choose your practice style and get personalized feedback to
-              improve your performance
+              Every part of the platform is designed to help neurodivergent
+              candidates prepare without being pushed into generic interview
+              norms that do not fit them.
             </p>
           </div>
-          <div className='grid gap-8 md:grid-cols-3'>
+          <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
             <Card className='relative overflow-hidden border-2 hover:border-cyan-400/30 hover:bg-purple-500/5 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/10 fade-in-element'>
               <CardHeader>
                 <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4'>
-                  <Brain className='h-6 w-6 text-white' />
+                  <TrendingUp className='h-6 w-6 text-white' />
                 </div>
-                <CardTitle>AI-Powered Interviews</CardTitle>
+                <CardTitle>Confidence First</CardTitle>
                 <CardDescription>
-                  Practice with our advanced AI that adapts to your responses
-                  and provides realistic interview scenarios
+                  The goal is not to judge one bad session. It is to help users
+                  see growth over time and feel safer returning for the next
+                  practice round.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className='space-y-2 text-sm'>
                   <li className='flex items-center'>
                     <CheckCircle className='mr-2 h-4 w-4 text-white' />
-                    Unlimited practice sessions
+                    Confidence strands instead of one reductive score
                   </li>
                   <li className='flex items-center'>
                     <CheckCircle className='mr-2 h-4 w-4 text-white' />
-                    Industry-specific questions
+                    Evidence of progress across sessions
                   </li>
                   <li className='flex items-center'>
                     <CheckCircle className='mr-2 h-4 w-4 text-white' />
-                    Real-time feedback
+                    Feedback that supports, not shames
                   </li>
                 </ul>
               </CardContent>
@@ -200,27 +204,28 @@ export default function LandingPage() {
             <Card className='relative overflow-hidden border-2 hover:border-cyan-400/30 hover:bg-purple-500/5 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/10 fade-in-element'>
               <CardHeader>
                 <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-secondary to-secondary/80 flex items-center justify-center mb-4'>
-                  <Users className='h-6 w-6 text-white' />
+                  <Shield className='h-6 w-6 text-white' />
                 </div>
-                <CardTitle>Real Human Interviewers</CardTitle>
+                <CardTitle>Bias Stripped</CardTitle>
                 <CardDescription>
-                  Connect with experienced professionals from your industry for
-                  authentic interview practice
+                  Interview feedback is shaped to reduce unfair assumptions and
+                  focus on clarity, structure, and substance rather than style
+                  conformity.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className='space-y-2 text-sm'>
                   <li className='flex items-center'>
                     <CheckCircle className='mr-2 h-4 w-4 text-white' />
-                    Verified industry experts
+                    ND profile signals used to reduce bias in evaluation
                   </li>
                   <li className='flex items-center'>
                     <CheckCircle className='mr-2 h-4 w-4 text-white' />
-                    Personalized coaching
+                    Focus on answer quality over presentation stereotypes
                   </li>
                   <li className='flex items-center'>
                     <CheckCircle className='mr-2 h-4 w-4 text-white' />
-                    Network building
+                    Fairer comparisons across attempts
                   </li>
                 </ul>
               </CardContent>
@@ -229,27 +234,114 @@ export default function LandingPage() {
             <Card className='relative overflow-hidden border-2 hover:border-cyan-400/30 hover:bg-purple-500/5 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/10 fade-in-element'>
               <CardHeader>
                 <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center mb-4'>
-                  <Zap className='h-6 w-6 text-white' />
+                  <Clock className='h-6 w-6 text-white' />
                 </div>
-                <CardTitle>Instant Feedback</CardTitle>
+                <CardTitle>Sensory Safe</CardTitle>
                 <CardDescription>
-                  Get detailed analysis of your performance with actionable
-                  insights to improve your skills
+                  The interview space avoids unnecessary pressure and gives the
+                  user room to regulate, pause, and keep going when ready.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <ul className='space-y-2 text-sm'>
                   <li className='flex items-center'>
                     <CheckCircle className='mr-2 h-4 w-4 text-white' />
-                    Speech analysis
+                    Pause and breathe without penalty
                   </li>
                   <li className='flex items-center'>
                     <CheckCircle className='mr-2 h-4 w-4 text-white' />
-                    Body language tips
+                    Safe exit that records progress without guilt
                   </li>
                   <li className='flex items-center'>
                     <CheckCircle className='mr-2 h-4 w-4 text-white' />
-                    Progress tracking
+                    A calm “take your time” practice environment
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className='relative overflow-hidden border-2 hover:border-cyan-400/30 hover:bg-purple-500/5 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/10 fade-in-element'>
+              <CardHeader>
+                <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4'>
+                  <Zap className='h-6 w-6 text-white' />
+                </div>
+                <CardTitle>Autonomy &amp; Control</CardTitle>
+                <CardDescription>
+                  Users can control how they prepare, how they respond, and how
+                  much support they want in the moment.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className='space-y-2 text-sm'>
+                  <li className='flex items-center'>
+                    <CheckCircle className='mr-2 h-4 w-4 text-white' />
+                    Scratchpad for private preparation
+                  </li>
+                  <li className='flex items-center'>
+                    <CheckCircle className='mr-2 h-4 w-4 text-white' />
+                    On-demand prompts like STAR and keywords
+                  </li>
+                  <li className='flex items-center'>
+                    <CheckCircle className='mr-2 h-4 w-4 text-white' />
+                    Plain-English question breakdowns when needed
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className='relative overflow-hidden border-2 hover:border-cyan-400/30 hover:bg-purple-500/5 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/10 fade-in-element'>
+              <CardHeader>
+                <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-secondary to-accent flex items-center justify-center mb-4'>
+                  <Target className='h-6 w-6 text-white' />
+                </div>
+                <CardTitle>Strengths-Led</CardTitle>
+                <CardDescription>
+                  The platform looks for what is working, then helps the user
+                  build from that instead of centering only deficits.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className='space-y-2 text-sm'>
+                  <li className='flex items-center'>
+                    <CheckCircle className='mr-2 h-4 w-4 text-white' />
+                    Highlights specificity, structure, and insight
+                  </li>
+                  <li className='flex items-center'>
+                    <CheckCircle className='mr-2 h-4 w-4 text-white' />
+                    Shows best session, average, and range
+                  </li>
+                  <li className='flex items-center'>
+                    <CheckCircle className='mr-2 h-4 w-4 text-white' />
+                    Encourages deserved confidence with evidence
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className='relative overflow-hidden border-2 hover:border-cyan-400/30 hover:bg-purple-500/5 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/10 fade-in-element'>
+              <CardHeader>
+                <div className='h-12 w-12 rounded-lg bg-gradient-to-br from-accent to-primary flex items-center justify-center mb-4'>
+                  <Brain className='h-6 w-6 text-white' />
+                </div>
+                <CardTitle>Psychological Safety</CardTitle>
+                <CardDescription>
+                  Practice should feel survivable. Users need room to try, miss,
+                  recover, and come back without feeling punished.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className='space-y-2 text-sm'>
+                  <li className='flex items-center'>
+                    <CheckCircle className='mr-2 h-4 w-4 text-white' />
+                    No leaderboard or public comparison
+                  </li>
+                  <li className='flex items-center'>
+                    <CheckCircle className='mr-2 h-4 w-4 text-white' />
+                    Gentle framing around progress and setbacks
+                  </li>
+                  <li className='flex items-center'>
+                    <CheckCircle className='mr-2 h-4 w-4 text-white' />
+                    A practice flow designed to be returned to
                   </li>
                 </ul>
               </CardContent>
@@ -263,11 +355,11 @@ export default function LandingPage() {
         <div className='container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           <div className='mx-auto max-w-2xl text-center mb-16 fade-in-element'>
             <h2 className='text-3xl font-bold sm:text-4xl'>
-              Practice Any Interview Type
+              Practice across the interview formats that matter
             </h2>
             <p className='mt-4 text-lg text-muted-foreground'>
-              From technical coding interviews to behavioral questions,
-              we&apos;ve got you covered
+              Build familiarity with different interview demands while keeping
+              the experience grounded in clarity and support.
             </p>
           </div>
           <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-4'>
@@ -278,8 +370,8 @@ export default function LandingPage() {
                 </div>
                 <h3 className='font-semibold mb-2'>Technical Interviews</h3>
                 <p className='text-sm text-muted-foreground'>
-                  Coding challenges, system design, and technical problem
-                  solving
+                  Coding, systems, and technical explanation practice without
+                  the usual rush.
                 </p>
               </CardContent>
             </Card>
@@ -290,7 +382,8 @@ export default function LandingPage() {
                 </div>
                 <h3 className='font-semibold mb-2'>Behavioral Interviews</h3>
                 <p className='text-sm text-muted-foreground'>
-                  STAR method, leadership scenarios, and culture fit questions
+                  Story-based answers, leadership examples, and structured
+                  reflection.
                 </p>
               </CardContent>
             </Card>
@@ -301,7 +394,8 @@ export default function LandingPage() {
                 </div>
                 <h3 className='font-semibold mb-2'>Case Studies</h3>
                 <p className='text-sm text-muted-foreground'>
-                  Business cases, consulting scenarios, and analytical thinking
+                  Analytical thinking, tradeoffs, and communicating a process
+                  clearly.
                 </p>
               </CardContent>
             </Card>
@@ -310,9 +404,10 @@ export default function LandingPage() {
                 <div className='h-12 w-12 flex items-center justify-center mx-auto mb-4'>
                   <Shield className='h-6 w-6 text-white' />
                 </div>
-                <h3 className='font-semibold mb-2'>Executive Interviews</h3>
+                <h3 className='font-semibold mb-2'>Situational Interviews</h3>
                 <p className='text-sm text-muted-foreground'>
-                  C-level positions, board presentations, and strategic thinking
+                  Hypothetical scenarios that test judgement, priorities, and
+                  decision-making.
                 </p>
               </CardContent>
             </Card>
@@ -326,12 +421,13 @@ export default function LandingPage() {
           <div className='grid gap-12 lg:grid-cols-2 items-center'>
             <div className='fade-in-element'>
               <h2 className='text-3xl font-bold sm:text-4xl mb-6'>
-                Track Your Progress with Advanced Analytics
+                Progress tracking that supports belief, not pressure
               </h2>
               <p className='text-lg text-muted-foreground mb-8'>
-                Get detailed insights into your interview performance with our
-                comprehensive analytics dashboard. Monitor your improvement over
-                time and identify areas that need more practice.
+                Users need evidence that their confidence is deserved. The
+                dashboard shows how self-belief, completion, consistency, and
+                performance move over time without reducing the person to one
+                number.
               </p>
               <div className='space-y-4'>
                 <div className='flex items-center'>
@@ -339,7 +435,7 @@ export default function LandingPage() {
                     <BarChart3 className='h-4 w-4 text-primary' />
                   </div>
                   <span className='text-sm'>
-                    Performance scoring across different question types
+                    Confidence and performance shown as separate signals
                   </span>
                 </div>
                 <div className='flex items-center'>
@@ -347,7 +443,7 @@ export default function LandingPage() {
                     <Clock className='h-4 w-4 text-white' />
                   </div>
                   <span className='text-sm'>
-                    Response time analysis and optimization tips
+                    Safe exits and pauses treated as useful progress data
                   </span>
                 </div>
                 <div className='flex items-center'>
@@ -355,7 +451,7 @@ export default function LandingPage() {
                     <Award className='h-4 w-4 text-accent' />
                   </div>
                   <span className='text-sm'>
-                    Confidence level tracking and improvement metrics
+                    Floor, average, and best-session context over time
                   </span>
                 </div>
               </div>
@@ -364,45 +460,43 @@ export default function LandingPage() {
               <div className='bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl p-8 border'>
                 <div className='space-y-6'>
                   <div className='flex items-center justify-between'>
-                    <span className='text-sm font-medium'>
-                      Overall Performance
-                    </span>
-                    <span className='text-2xl font-bold text-primary'>87%</span>
+                    <span className='text-sm font-medium'>Latest confidence view</span>
+                    <span className='text-2xl font-bold text-primary'>Steady</span>
                   </div>
                   <div className='space-y-3'>
                     <div>
                       <div className='flex justify-between text-sm mb-1'>
-                        <span>Technical Questions</span>
-                        <span>92%</span>
+                        <span>Self-belief</span>
+                        <span>68%</span>
                       </div>
                       <div className='w-full bg-gray-800 rounded-full h-2'>
                         <div
                           className='bg-primary h-2 rounded-full'
-                          style={{ width: '92%' }}
+                          style={{ width: '68%' }}
                         ></div>
                       </div>
                     </div>
                     <div>
                       <div className='flex justify-between text-sm mb-1'>
-                        <span>Behavioral Questions</span>
-                        <span>85%</span>
+                        <span>Performance</span>
+                        <span>81%</span>
                       </div>
                       <div className='w-full bg-gray-800 rounded-full h-2'>
                         <div
                           className='bg-white h-2 rounded-full'
-                          style={{ width: '85%' }}
+                          style={{ width: '81%' }}
                         ></div>
                       </div>
                     </div>
                     <div>
                       <div className='flex justify-between text-sm mb-1'>
-                        <span>Communication Skills</span>
-                        <span>78%</span>
+                        <span>Completion</span>
+                        <span>75%</span>
                       </div>
                       <div className='w-full bg-gray-800 rounded-full h-2'>
                         <div
                           className='bg-accent h-2 rounded-full'
-                          style={{ width: '78%' }}
+                          style={{ width: '75%' }}
                         ></div>
                       </div>
                     </div>
@@ -419,10 +513,12 @@ export default function LandingPage() {
         <div className='container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           <div className='mx-auto max-w-2xl text-center mb-16 fade-in-element'>
             <h2 className='text-3xl font-bold sm:text-4xl'>
-              Loved by job seekers worldwide
+              Built for people who need a safer way to practise
             </h2>
             <p className='mt-4 text-lg text-muted-foreground'>
-              Join thousands who have landed their dream jobs with MockView
+              The goal is not to simulate pressure for its own sake. It is to
+              help people prepare well enough that real interviews feel more
+              manageable.
             </p>
           </div>
           <div className='grid gap-8 md:grid-cols-3'>
@@ -434,16 +530,16 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className='text-sm mb-4'>
-                  &apos;MockView helped me prepare for my interview. The AI
-                  feedback was incredibly detailed and helped me identify areas
-                  I never knew I needed to work on.&apos;
+                  &apos;The most helpful part was that one bad session did not
+                  make me feel like I had failed. I could actually see what was
+                  improving underneath the nerves.&apos;
                 </p>
                 <div className='flex items-center'>
                   <div className='h-10 w-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold'>
                     S
                   </div>
                   <div className='ml-3'>
-                    <p className='font-semibold text-sm'>Sarah</p>
+                    <p className='font-semibold text-sm'>Product designer</p>
                   </div>
                 </div>
               </CardContent>
@@ -457,15 +553,16 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className='text-sm mb-4'>
-                  &apos;The human interviewer feature is amazing! I got to
-                  practice with a real hiring manager. It helped a lot.&apos;
+                  &apos;Being able to pause, take notes, and ask what a question
+                  really meant made the platform feel usable for my brain, not
+                  just impressive on paper.&apos;
                 </p>
                 <div className='flex items-center'>
                   <div className='h-10 w-10 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center text-white font-semibold'>
                     D
                   </div>
                   <div className='ml-3'>
-                    <p className='font-semibold text-sm'>Dami</p>
+                    <p className='font-semibold text-sm'>Frontend engineer</p>
                   </div>
                 </div>
               </CardContent>
@@ -479,16 +576,16 @@ export default function LandingPage() {
                   ))}
                 </div>
                 <p className='text-sm mb-4'>
-                  &apos;I was nervous about interviews, but MockView built my
-                  confidence. The progress tracking showed me how much I
-                  improved over time.&apos;
+                  &apos;I scored well before I felt confident, and the platform
+                  helped me notice that gap instead of assuming I was doing
+                  badly. That changed how I approached interviews.&apos;
                 </p>
                 <div className='flex items-center'>
                   <div className='h-10 w-10 rounded-full bg-gradient-to-br from-accent to-primary flex items-center justify-center text-white font-semibold'>
                     A
                   </div>
                   <div className='ml-3'>
-                    <p className='font-semibold text-sm'>Aisha</p>
+                    <p className='font-semibold text-sm'>Data analyst</p>
                   </div>
                 </div>
               </CardContent>
@@ -502,10 +599,11 @@ export default function LandingPage() {
         <div className='container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
           <div className='mx-auto max-w-2xl text-center fade-in-element'>
             <h2 className='text-3xl font-bold sm:text-4xl'>
-              Ready to ace your next interview?
+              Start practising in a way that respects how you work
             </h2>
             <p className='mt-4 text-lg text-muted-foreground'>
-              Join thousands of successful job seekers who trust MockView
+              Build confidence with bias-aware, sensory-safe mock interviews
+              designed for neurodivergent candidates.
             </p>
             <div className='mt-8 flex flex-col sm:flex-row gap-4 justify-center'>
               <Button
@@ -528,8 +626,8 @@ export default function LandingPage() {
             <div>
               <Logo />
               <p className='text-sm text-muted-foreground'>
-                Master your interviews with AI-powered practice and real human
-                feedback.
+                Mock interviews for neurodivergent candidates, built around
+                confidence, fairness, and psychological safety.
               </p>
             </div>
             <div>
@@ -540,7 +638,7 @@ export default function LandingPage() {
                     href='#'
                     className='hover:text-foreground transition-colors'
                   >
-                    AI Interviews
+                    Confidence tracking
                   </a>
                 </li>
                 <li>
@@ -548,7 +646,7 @@ export default function LandingPage() {
                     href='#'
                     className='hover:text-foreground transition-colors'
                   >
-                    Human Interviews
+                    Bias-stripped feedback
                   </a>
                 </li>
                 <li>
@@ -556,7 +654,7 @@ export default function LandingPage() {
                     href='#'
                     className='hover:text-foreground transition-colors'
                   >
-                    Feedback
+                    Sensory-safe sessions
                   </a>
                 </li>
                 <li>
@@ -564,7 +662,7 @@ export default function LandingPage() {
                     href='#'
                     className='hover:text-foreground transition-colors'
                   >
-                    Analytics
+                    Session history
                   </a>
                 </li>
               </ul>

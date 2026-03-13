@@ -6,25 +6,33 @@ import { ProtectedRoute } from '@/components/auth/protected-route';
 import { DashboardLayout } from '@/components/layout/dashboard-layout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import { useTheme } from '@/lib/contexts/theme-context';
 import {
   Plus,
   Clock,
   RotateCcw,
   Eye,
-  Search,
-  Filter,
-  Loader2,
   Trash2,
+  Loader2,
 } from 'lucide-react';
 import type { InterviewCard as InterviewCardType } from '@/lib/types/interview.types';
 import { toast } from 'sonner';
 
 export default function InterviewsPage() {
+  const ITEMS_PER_PAGE = 6;
   const { theme } = useTheme();
   const router = useRouter();
   const [interviews, setInterviews] = useState<InterviewCardType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
     interviewId: string;
@@ -123,7 +131,7 @@ export default function InterviewsPage() {
         setLoading(true);
         const response = await fetch('/api/interviews');
         const data = await response.json();
-        setInterviews(data?.data);
+        setInterviews(data?.data || []);
         setLoading(false);
       };
       fetchInterviews();
@@ -132,6 +140,19 @@ export default function InterviewsPage() {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    const totalPages = Math.max(1, Math.ceil(interviews.length / ITEMS_PER_PAGE));
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, interviews.length]);
+
+  const totalPages = Math.max(1, Math.ceil(interviews.length / ITEMS_PER_PAGE));
+  const paginatedInterviews = interviews.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   if (loading) {
     return (
@@ -187,7 +208,7 @@ export default function InterviewsPage() {
 
           {/* Interviews List */}
           <div className='space-y-4'>
-            {interviews?.map((interview) => (
+            {paginatedInterviews.map((interview) => (
               <div
                 key={interview.id}
                 className={`w-full rounded-lg border transition-colors ${
@@ -294,6 +315,65 @@ export default function InterviewsPage() {
               </div>
             ))}
           </div>
+
+          {interviews.length > ITEMS_PER_PAGE && (
+            <div className='mt-8'>
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href='#'
+                      onClick={(event) => {
+                        event.preventDefault();
+                        if (currentPage > 1) {
+                          setCurrentPage((page) => page - 1);
+                        }
+                      }}
+                      className={
+                        currentPage === 1
+                          ? 'pointer-events-none opacity-50'
+                          : undefined
+                      }
+                    />
+                  </PaginationItem>
+
+                  {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                    (page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          href='#'
+                          isActive={page === currentPage}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            setCurrentPage(page);
+                          }}
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )
+                  )}
+
+                  <PaginationItem>
+                    <PaginationNext
+                      href='#'
+                      onClick={(event) => {
+                        event.preventDefault();
+                        if (currentPage < totalPages) {
+                          setCurrentPage((page) => page + 1);
+                        }
+                      }}
+                      className={
+                        currentPage === totalPages
+                          ? 'pointer-events-none opacity-50'
+                          : undefined
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
 
           {/* Empty state would go here if no interviews */}
           {interviews?.length === 0 && (

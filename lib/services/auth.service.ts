@@ -208,13 +208,21 @@ class AuthService {
         return { success: false };
       }
 
+      const { data: profile } = await supabase
+        .from('users')
+        .select('full_name, credits, nd_type, created_at, updated_at')
+        .eq('id', user.id)
+        .maybeSingle();
+
       const userData: User = {
         id: user.id,
         email: user.email!,
-        fullName: user.user_metadata?.full_name || user.email!,
-        createdAt: user.created_at,
-        updatedAt: user.updated_at || user.created_at,
-        credits: user.user_metadata?.credits || 0,
+        fullName:
+          profile?.full_name || user.user_metadata?.full_name || user.email!,
+        createdAt: profile?.created_at || user.created_at,
+        updatedAt: profile?.updated_at || user.updated_at || user.created_at,
+        credits: profile?.credits ?? user.user_metadata?.credits ?? 0,
+        ndType: profile?.nd_type || null,
       };
 
       return { success: true, data: userData };
@@ -411,18 +419,72 @@ class AuthService {
 
   async updateProfile(data: {
     fullName?: string;
+    ndType?: string;
   }): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase.auth.updateUser({
-        data: {
-          full_name: data.fullName,
-        },
-      });
+      const {
+        data: { user },
+        error: getUserError,
+      } = await supabase.auth.getUser();
 
-      if (error) {
+      if (getUserError || !user) {
         return {
           success: false,
-          error: error.message,
+          error: 'User not authenticated',
+        };
+      }
+
+      const authPayload: Record<string, string> = {};
+
+      if (typeof data.fullName !== 'undefined') {
+        authPayload.full_name = data.fullName;
+      }
+
+      if (Object.keys(authPayload).length > 0) {
+        const { error } = await supabase.auth.updateUser({
+          data: authPayload,
+        });
+
+        if (error) {
+          return {
+            success: false,
+            error: error.message,
+          };
+        }
+      }
+
+      const profilePayload: Record<string, string> = {};
+
+      if (typeof data.fullName !== 'undefined') {
+        profilePayload.full_name = data.fullName;
+      }
+
+      if (typeof data.ndType !== 'undefined') {
+        profilePayload.nd_type = data.ndType;
+      }
+
+      if (Object.keys(profilePayload).length === 0) {
+        return { success: true };
+      }
+
+      const { error: profileError } = await supabase.from('users').upsert(
+        {
+          id: user.id,
+          email: user.email,
+          full_name:
+            profilePayload.full_name ||
+            user.user_metadata?.full_name ||
+            user.email,
+          ...profilePayload,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'id' }
+      );
+
+      if (profileError) {
+        return {
+          success: false,
+          error: profileError.message,
         };
       }
 

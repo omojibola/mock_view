@@ -115,3 +115,73 @@ export interface FeedbackData {
   duration?: number;
   type?: string;
 }
+
+export interface DashboardPerformancePoint {
+  id: string;
+  label: string;
+  title: string;
+  date: string;
+  score: number;
+  type?: string;
+  attemptNumber?: number;
+}
+
+export interface DashboardPerformanceSummary {
+  latestInterview: DashboardPerformancePoint | null;
+  previousInterview: DashboardPerformancePoint | null;
+  history: DashboardPerformancePoint[];
+  averageScore: number | null;
+  completedCount: number;
+  trend: number | null;
+}
+
+export interface ConfidenceCheckinStatements {
+  knewWhatToSay: number;
+  feltUnjudged: number;
+  realInterviewReadiness: number;
+  recoveredWhenStuck: number;
+}
+
+export interface ConfidenceCheckin {
+  interviewId: string;
+  attemptNumber: number;
+  statements: ConfidenceCheckinStatements;
+  selfBeliefScore: number;
+  createdAt: string;
+}
+
+export interface DashboardConfidencePoint {
+  id: string;
+  label: string;
+  title: string;
+  date: string;
+  performance: number;
+  selfBelief: number | null;
+  readiness: number | null;
+  completion: number | null;
+  consistency: number | null;
+  challenge: number | null;
+  type?: string;
+}
+
+export interface DashboardConfidenceSummary {
+  latestSession: DashboardConfidencePoint | null;
+  history: DashboardConfidencePoint[];
+  averagePerformance: number | null;
+  floorPerformance: number | null;
+  ceilingPerformance: number | null;
+  mismatchCount: number;
+  mismatchInsight: string | null;
+}
+
+export interface InterviewSessionListItem {
+  id: string;
+  interviewId: string;
+  title: string;
+  score: number | null;
+  completed: boolean;
+  safeExited: boolean;
+  createdAt: string;
+  attemptNumber: number | null;
+  type?: string;
+}
