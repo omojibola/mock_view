@@ -122,19 +122,7 @@ export default function LandingPage() {
                 Get Started Now
                 <ArrowRight className='ml-2 h-5 w-5' />
               </Button>
-              <Button
-                variant='outline'
-                size='lg'
-                className='text-sm px-8 py-6 bg-transparent rounded-full'
-                onClick={() =>
-                  window.open(
-                    'https://www.loom.com/share/b0f1e42a58e44a65a0b0c38515f6be4d?sid=cec91ce5-6fe7-4be7-9e09-321f0d771ba1',
-                    '_blank'
-                  )
-                }
-              >
-                Watch Demo
-              </Button>
+              
             </div>
             <div className='mt-12 flex items-center justify-center space-x-8 text-sm text-muted-foreground fade-in-element'>
               <div className='flex items-center'>
