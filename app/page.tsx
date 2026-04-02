@@ -107,10 +107,7 @@ export default function LandingPage() {
               <span className='text-cyan-400'>fair, calm, and safe</span>
             </h1>
             <p className='mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl fade-in-element'>
-              MockView helps neurodivergent candidates build confidence through
-              bias-stripped feedback, sensory-safe practice, and tools that
-              protect autonomy while strengthening real interview performance.
-            </p>
+            MockView helps neurodivergent candidates build confidence with fair feedback, low-stress practice, and tools that support them without taking control away
             <div className='mt-10 flex flex-col sm:flex-row gap-4 justify-center fade-in-element'>
               <Button
                 size='lg'
